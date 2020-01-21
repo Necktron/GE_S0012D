@@ -1,0 +1,5 @@
+---
+imports:
+     nebula:
+        git: https://github.com/gscept/nebula.git
+        branch: pre-alpha

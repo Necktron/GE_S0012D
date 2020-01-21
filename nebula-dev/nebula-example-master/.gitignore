@@ -1,0 +1,13 @@
+build/
+configs/.selected
+*.swp
+CMakeLists.txt.user*
+.fips-*
+.vscode
+*.patch
+fips-generators/*.pyc
+/fips-files/verbs/*.pyc
+/fips-files/generators/**/*.pyc
+export_win32/*
+export_linux/*
+work/*
