@@ -31,7 +31,7 @@
 #include "io/debug/iopagehandler.h"
 #include "io/fswrapper.h"
 #include "system/nebulasettings.h"
-
+#include "profiling/profiling.h"
 
 #ifdef __WIN32__
 #include <shellapi.h>
@@ -158,6 +158,10 @@ ExampleApplication::Open()
         this->wnd = CreateWindow(wndInfo);
 		this->cam = Graphics::CreateEntity();
 
+#if NEBULA_ENABLE_PROFILING
+		Profiling::ProfilingRegisterThread();
+#endif
+
         // create contexts, this could and should be bundled together
         CameraContext::Create();
         ModelContext::Create();
@@ -280,6 +284,19 @@ ExampleApplication::Run()
     Characters::CharacterContext::Setup(animatedEntity, "ske:Units/Unit_Footman.nsk3", "ani:Units/Unit_Footman.nax3", "Examples");
     Characters::CharacterContext::PlayClip(animatedEntity, nullptr, 0, 0, Characters::Append, 1.0f, 1, Math::n_rand() * 100.0f, 0.0f, 0.0f, Math::n_rand() * 100.0f);
 
+    // Example animated entity
+    Graphics::GraphicsEntityId soldier = Graphics::CreateEntity();
+    // The CharacterContext holds skinned, animated entites and takes care of playing animations etc.
+    Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(soldier);
+    // create model and move it to the front
+    ModelContext::Setup(soldier, "mdl:Units/Unit_King.n3", "Examples");
+    ModelContext::SetTransform(soldier, Math::matrix44::translation(Math::point(10, 0, 0)));
+    ObservableContext::Setup(soldier, VisibilityEntityType::Model);
+    // Setup the character context instance.
+    // nsk3 is the skeleton resource, nax3 is the animation resource. nax3 files can contain multiple animation clips
+    Characters::CharacterContext::Setup(soldier, "ske:Units/Unit_King.nsk3", "ani:Units/Unit_King.nax3", "Examples");
+    Characters::CharacterContext::PlayClip(soldier, nullptr, 0, 0, Characters::Append, 1.0f, 1, Math::n_rand() * 100.0f, 0.0f, 0.0f, Math::n_rand() * 100.0f);
+
     // Create a point light entity
     Graphics::GraphicsEntityId pointLight = Graphics::CreateEntity();
     // You can also register to contexts directly
@@ -288,6 +305,10 @@ ExampleApplication::Run()
 
     while (run && !inputServer->IsQuitRequested())
     {   
+#if NEBULA_ENABLE_PROFILING
+		Profiling::ProfilingNewFrame();
+#endif
+
 #if __NEBULA_HTTP__
 		this->httpServerProxy->HandlePendingRequests();
 #endif
