@@ -32,6 +32,7 @@
 #include "io/fswrapper.h"
 #include "system/nebulasettings.h"
 #include "profiling/profiling.h"
+#include "ECS.h"
 
 #ifdef __WIN32__
 #include <shellapi.h>
@@ -257,6 +258,9 @@ ExampleApplication::Run()
 
     const Ptr<Input::Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
     const Ptr<Input::Mouse>& mouse = inputServer->GetDefaultMouse();
+
+    EntityManager* neckManager = new EntityManager;
+    neckManager->Init();
     
     Graphics::GraphicsEntityId exampleEntity = Graphics::CreateEntity();
     // Register entity to various graphics contexts.
@@ -284,6 +288,8 @@ ExampleApplication::Run()
     Characters::CharacterContext::Setup(animatedEntity, "ske:Units/Unit_Footman.nsk3", "ani:Units/Unit_Footman.nax3", "Examples");
     Characters::CharacterContext::PlayClip(animatedEntity, nullptr, 0, 0, Characters::Append, 1.0f, 1, Math::n_rand() * 100.0f, 0.0f, 0.0f, Math::n_rand() * 100.0f);
 
+    neckManager->AddEnt("Footman");
+
     // Example animated entity
     Graphics::GraphicsEntityId soldier = Graphics::CreateEntity();
     // The CharacterContext holds skinned, animated entites and takes care of playing animations etc.
@@ -296,6 +302,16 @@ ExampleApplication::Run()
     // nsk3 is the skeleton resource, nax3 is the animation resource. nax3 files can contain multiple animation clips
     Characters::CharacterContext::Setup(soldier, "ske:Units/Unit_King.nsk3", "ani:Units/Unit_King.nax3", "Examples");
     Characters::CharacterContext::PlayClip(soldier, nullptr, 0, 0, Characters::Append, 1.0f, 1, Math::n_rand() * 100.0f, 0.0f, 0.0f, Math::n_rand() * 100.0f);
+
+    neckManager->AddEnt("King");
+    GameEntity* foundEnt = neckManager->FindEnt("King");
+    foundEnt->AddComp("TransformComp");
+    foundEnt->AddComp("GraphicalComp");
+    foundEnt = neckManager->FindEnt("Footman");
+    foundEnt->AddComp("GraphicalComp");
+    foundEnt = neckManager->FindEnt("King");
+    foundEnt->DelComp("GraphicalComp");
+    neckManager->DelEnt("Footman");
 
     // Create a point light entity
     Graphics::GraphicsEntityId pointLight = Graphics::CreateEntity();
