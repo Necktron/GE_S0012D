@@ -59,7 +59,7 @@ public:
 	void Shutdown();
 	GameEntity* FindEnt(Util::StringAtom entitySearch);
 	bool AddEnt(Util::StringAtom entityName);
-	bool AddEnt(Util::StringAtom entityName, Resources::ResourceName mesh, Resources::ResourceName anim, Resources::ResourceName skel);
+	bool AddEnt(Util::StringAtom entityName, GameEntity::Models loadout);
 	void DelEnt(Util::StringAtom entToDel);
 };
 //namespace std

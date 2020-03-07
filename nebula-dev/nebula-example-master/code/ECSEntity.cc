@@ -5,27 +5,44 @@ GameEntity::GameEntity(Util::StringAtom name)
 	entName = name;
 }
 
-GameEntity::GameEntity(Util::StringAtom name, Resources::ResourceName mesh, Resources::ResourceName anim, Resources::ResourceName skel)
+GameEntity::GameEntity(Util::StringAtom name, GameEntity::Models loadout)
 {
 	entName = name;
-	meshResource = mesh;
-	animResource = anim;
-	skeletonResource = skel;
+
+	if (loadout == 0)
+	{
+		meshResource = "mdl:Units/Unit_King.n3";
+		animResource = "ani:Units/Unit_King.nax3";
+		skeletonResource = "ske:Units/Unit_King.nsk3";
+	}
+
+	else if (loadout == 1)
+	{
+		meshResource = "mdl:Units/Unit_Footman.n3";
+		animResource = "ani:Units/Unit_Footman.nax3";
+		skeletonResource = "ske:Units/Unit_Footman.nsk3";
+	}
+}
+
+GameEntity::~GameEntity()
+{
+	compList = NULL;
 }
 
 void GameEntity::Init()
 {
 	GEID = Graphics::CreateEntity();
-	Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(GEID);
 
 	//Init the GameEntity components
 	for (int i = 0; i < compList.size(); i++)
 	{
 		if (compList[i]->compID == 1)
-			compList[i]->Init(GEID);
+			compList[i]->Init(GEID, this->registered);
 
 		if (compList[i]->compID == 2)
-			compList[i]->Init(GEID, meshResource, animResource, skeletonResource);
+			compList[i]->Init(GEID, meshResource, animResource, skeletonResource, this->registered);
+		
+		this->registered = true;
 	}
 }
 
@@ -41,9 +58,28 @@ void GameEntity::Update()
 void GameEntity::Shutdown()
 {
 	//Shuts down the GameEntity components
+	while (compList.size() > 0)
+	{
+		compList[0]->Shutdown();
+		compList[0] = NULL;
+		compList.EraseFront();
+	}
+
+	this->~GameEntity();
+	delete this;
+}
+
+void GameEntity::MSGSend(ComponentCore* recieverComp, ECSMSG::ECSMSGTypes msg)
+{
+	//Init the EntityManagers enteties
 	for (int i = 0; i < compList.size(); i++)
 	{
-		compList[i]->Shutdown();
+		if (compList[i]->compID == recieverComp->compID)
+		{
+			recieverComp->MSGRecieve(msg);
+			n_printf("We have sen't a message from a GameEntity");
+			break;
+		}
 	}
 }
 

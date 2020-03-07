@@ -39,6 +39,7 @@
 #include "io/fswrapper.h"
 #include "system/nebulasettings.h"
 #include "profiling/profiling.h"
+#include "ECSMessage.h"
 
 using namespace Timing;
 using namespace Graphics;
@@ -53,13 +54,12 @@ class ComponentCore
 public:
 	int compID;
 	Graphics::GraphicsEntityId GEID = NULL;
-
-	virtual void Init(Graphics::GraphicsEntityId GEIDREF);
-	virtual void Init(Graphics::GraphicsEntityId GEIDREF, Resources::ResourceName mesh, Resources::ResourceName anim, Resources::ResourceName skel);
+	//What to do when you recieve a message
+	virtual void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
+	virtual void Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg);
 	virtual void Update();
 	virtual void Shutdown();
-	virtual void Get();
-	virtual void Set();
+	virtual void MSGRecieve(ECSMSG::ECSMSGTypes msg);
 };
 
 //WIP
@@ -67,28 +67,34 @@ class TransComp : public ComponentCore
 {
 public:
 	Math::matrix44 transform;
-	float movePos = 0;
+	float movePosX = 0;
+	float movePosY = 0;
+	float movePosZ = 0;
 
 	TransComp();
-	void Init(Graphics::GraphicsEntityId GEIDREF);
+	~TransComp();
+	void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
 	void Update();
 	void Shutdown();
-	void Get();
-	void Set();
+	void MSGRecieve(ECSMSG::ECSMSGTypes msg);
+	void ForwardWalk();
+	void BackWalk();
+	void RightWalk();
+	void LeftWalk();
 };
 
 //WIP
 class GraphicalComp : public ComponentCore
 {
 public:
-	const Resources::ResourceName& meshResource = nullptr;
-	const Resources::ResourceName& animResource = nullptr;
-	const Resources::ResourceName& skeletonResource = nullptr;
+	Util::StringAtom meshResource = nullptr;
+	Util::StringAtom animResource = nullptr;
+	Util::StringAtom skeletonResource = nullptr;
 
 	GraphicalComp();
-	void Init(Graphics::GraphicsEntityId GEIDREF, Resources::ResourceName mesh, Resources::ResourceName anim, Resources::ResourceName skel);
+	~GraphicalComp();
+	void Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg);
 	void Update();
 	void Shutdown();
-	void Get();
-	void Set();
+	void MSGRecieve(ECSMSG::ECSMSGTypes msg);
 };

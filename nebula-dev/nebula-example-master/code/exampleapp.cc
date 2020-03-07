@@ -262,13 +262,27 @@ namespace Example
         EntityManager* neckManager = new EntityManager;
         ComponentCore* neckComp = new ComponentCore;
 
-        neckManager->AddEnt("King", "mdl:Units/Unit_Footman.n3", "ani:Units/Unit_Footman.nax3", "ske:Units/Unit_Footman.nsk3");
-        GameEntity* foundEnt = neckManager->FindEnt("King");
-        foundEnt->AddComp("TransformComp");
-        foundEnt->AddComp("GraphicalComp");
-        foundEnt->Init();
+        neckManager->AddEnt("Peasent", GameEntity::Models::Footman);
+        neckManager->AddEnt("King1", GameEntity::Models::King);
+        neckManager->AddEnt("King2", GameEntity::Models::King);
+        neckManager->AddEnt("King3", GameEntity::Models::King);
+        neckManager->AddEnt("King4", GameEntity::Models::King);
+        neckManager->AddEnt("King5", GameEntity::Models::King);
+        neckManager->AddEnt("King6", GameEntity::Models::King);
+        neckManager->AddEnt("King7", GameEntity::Models::King);
+        neckManager->AddEnt("King8", GameEntity::Models::King);
+        
+        for (int i = 0; i < neckManager->entities.size(); i++)
+        {
+            neckManager->entities[i]->AddComp("TransformComp");
+            neckManager->entities[i]->AddComp("GraphicalComp");
+        }
 
-        /*Graphics::GraphicsEntityId exampleEntity = Graphics::CreateEntity();
+        neckManager->Init();
+        //Comment
+        //neckManager->Shutdown();
+        //Comment
+        Graphics::GraphicsEntityId exampleEntity = Graphics::CreateEntity();
         // Register entity to various graphics contexts.
         // The template parameters are which contexts that the entity should be registered to.
         // ModelContext takes care of loading models and also handles transforms for instances of models.
@@ -307,7 +321,6 @@ namespace Example
         // nsk3 is the skeleton resource, nax3 is the animation resource. nax3 files can contain multiple animation clips
         Characters::CharacterContext::Setup(soldier, "ske:Units/Unit_King.nsk3", "ani:Units/Unit_King.nax3", "Examples");
         Characters::CharacterContext::PlayClip(soldier, nullptr, 0, 0, Characters::Append, 1.0f, 1, Math::n_rand() * 100.0f, 0.0f, 0.0f, Math::n_rand() * 100.0f);
-        */
 
         // Create a point light entity
         Graphics::GraphicsEntityId pointLight = Graphics::CreateEntity();
@@ -326,6 +339,8 @@ namespace Example
 #endif
 
             this->coreServer->Trigger();
+
+            //neckManager->Update();
 
             this->inputServer->BeginFrame();
             this->inputServer->OnFrame();
@@ -363,6 +378,18 @@ namespace Example
 
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::F8))
                 Resources::ResourceManager::Instance()->ReloadResource("shd:imgui.fxb");
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::W))
+                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::S))
+                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkBack);
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::A))
+                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkLeft);
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::D))
+                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkRight);
 
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::F1))
             {

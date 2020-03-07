@@ -1,23 +1,18 @@
-class ECS_MSG
+#pragma once
+#ifndef MESSAGER_H
+#define MESSAGER_H
+#endif
+
+class ECSMSG
 {
+public:
 	//Different message types
-	enum MSGType
+	enum ECSMSGTypes
 	{
-		MSGT_AssignVariables = 0,
-		MSGT_UpdatePos = 1,
-		MSGT_UpdateGraphical = 2,
-		MSGT_Shutdown = 3
+		WalkForward = 1,
+		WalkLeft = 2,
+		WalkRight = 3,
+		WalkBack = 4,
+		UpdatePos = 5
 	};
-
-	//What to do when you send a message
-	void MSG_Send()
-	{
-
-	}
-
-	//What to do when you recieve a message
-	void MSG_Recieve()
-	{
-
-	}
 };
