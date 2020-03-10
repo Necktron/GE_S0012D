@@ -3,6 +3,10 @@
 GameEntity::GameEntity(Util::StringAtom name)
 {
 	entName = name;
+
+	lo.loMesh = "mdl:Units/Unit_Footman.n3";
+	lo.loAnim = "ani:Units/Unit_Footman.nax3";
+	lo.loSkel = "ske:Units/Unit_Footman.nsk3";
 }
 
 GameEntity::GameEntity(Util::StringAtom name, GameEntity::Models loadout)
@@ -11,16 +15,23 @@ GameEntity::GameEntity(Util::StringAtom name, GameEntity::Models loadout)
 
 	if (loadout == 0)
 	{
-		meshResource = "mdl:Units/Unit_King.n3";
-		animResource = "ani:Units/Unit_King.nax3";
-		skeletonResource = "ske:Units/Unit_King.nsk3";
+		lo.loMesh = "mdl:Units/Unit_King.n3";
+		lo.loAnim = "ani:Units/Unit_King.nax3";
+		lo.loSkel = "ske:Units/Unit_King.nsk3";
 	}
 
 	else if (loadout == 1)
 	{
-		meshResource = "mdl:Units/Unit_Footman.n3";
-		animResource = "ani:Units/Unit_Footman.nax3";
-		skeletonResource = "ske:Units/Unit_Footman.nsk3";
+		lo.loMesh = "mdl:Units/Unit_Footman.n3";
+		lo.loAnim = "ani:Units/Unit_Footman.nax3";
+		lo.loSkel = "ske:Units/Unit_Footman.nsk3";
+	}
+
+	else if (loadout == 2)
+	{
+		lo.loMesh = "mdl:Units/Unit_Spearman.n3";
+		lo.loAnim = "ani:Units/Unit_Spearman.nax3";
+		lo.loSkel = "ske:Units/Unit_Spearman.nsk3";
 	}
 }
 
@@ -31,17 +42,24 @@ GameEntity::~GameEntity()
 
 void GameEntity::Init()
 {
-	GEID = Graphics::CreateEntity();
+	CompVar test;
+	test = Graphics::CreateEntity();
+	SetVar("GEID", test.vGEIDref);
 
 	//Init the GameEntity components
 	for (int i = 0; i < compList.size(); i++)
 	{
 		if (compList[i]->compID == 1)
-			compList[i]->Init(GEID, this->registered);
+			compList[i]->Init(this->varLibrary["GEID"].vGEIDref, this->varLibrary["xVal"].vFloatNum, this->varLibrary["yVal"].vFloatNum, this->varLibrary["zVal"].vFloatNum, this->varLibrary["movePosX"].vFloatNum, this->varLibrary["movePosY"].vFloatNum, this->varLibrary["movePosZ"].vFloatNum, this->registered);
 
-		if (compList[i]->compID == 2)
-			compList[i]->Init(GEID, meshResource, animResource, skeletonResource, this->registered);
-		
+		else if (compList[i]->compID == 2)
+		{
+			SetVar("meshResource", n_new(Util::StringAtom(lo.loMesh)));
+			SetVar("animResource", n_new(Util::StringAtom(lo.loAnim)));
+			SetVar("skeletonResource", n_new(Util::StringAtom(lo.loSkel)));
+			compList[i]->Init(this->varLibrary["GEID"].vGEIDref, this->varLibrary["meshResource"].vStrAtom->Value(), this->varLibrary["animResource"].vStrAtom->Value(), this->varLibrary["skeletonResource"].vStrAtom->Value(), this->registered);
+		}
+
 		this->registered = true;
 	}
 }
@@ -105,6 +123,92 @@ ComponentCore* GameEntity::FindComp(Util::StringAtom compSearch)
 	return 0;
 }
 
+void GameEntity::AddCompVar(Util::StringAtom key, CompVar value)
+{
+	CompVar valToAdd = CompVar(value);
+
+	if (this->varLibrary.Contains(key))
+	{
+		n_printf("This key already exsists! Can't add pair value!");
+	}
+
+	else
+	{
+		this->varLibrary.Add(key, value);
+	}
+}
+
+void GameEntity::SetVar(Util::StringAtom varName, CompVar newValue)
+{
+	if (this->varLibrary.Contains(varName))
+	{
+		n_printf("This key exsists! We can now change the value of it!");
+
+		switch (this->varLibrary[varName].data)
+		{
+			case CompVar::cvInt:
+				this->varLibrary[varName] = newValue.vIntNum;
+				break;
+
+			case CompVar::cvFloat:
+				this->varLibrary[varName] = newValue.vFloatNum;
+				break;
+
+			case CompVar::cvMatrix:
+				this->varLibrary[varName] = newValue.vMatrix;
+				break;
+
+			case CompVar::cvStringAtom:
+				this->varLibrary[varName] = newValue.vStrAtom;
+				break;
+
+			case CompVar::cvGEID:
+				this->varLibrary[varName] = newValue.vGEIDref;
+				break;
+		}
+	}
+
+	n_printf("This key does not exsist! We can't set the value!");
+}
+
+GameEntity::CompVar* GameEntity::GetVar(Util::StringAtom varName)
+{
+	if (this->varLibrary.Contains(varName))
+	{
+		n_printf("This key exsists! We can now retrieve the value of it!");
+
+		return &this->varLibrary[varName];
+		/*switch (this->varLibrary[varName].data)
+		{
+			case CompVar::cvInt:
+				return &this->varLibrary[varName];
+				break;
+
+			case CompVar::cvFloat:
+				return &this->varLibrary[varName];
+				break;
+
+			case CompVar::cvMatrix:
+				return &this->varLibrary[varName];
+				break;
+
+			case CompVar::cvStringAtom:
+				return &this->varLibrary[varName];
+				break;
+
+			case CompVar::cvGEID:
+				return &this->varLibrary[varName];
+				break;
+		}
+
+		return 0;*/
+				
+	}
+
+	n_printf("This key does not exsist! We can't retrieve the value!");
+	return 0;
+}
+
 void GameEntity::AddComp(Util::StringAtom compToAdd)
 {
 	//If it's a transform comp
@@ -154,3 +258,101 @@ void GameEntity::DelComp(Util::StringAtom compToDel)
 		}
 	}
 }
+
+//Comp stuff
+GameEntity::CompVar::CompVar()
+{
+
+};
+
+GameEntity::CompVar::CompVar(int vInt)
+{
+	this->vIntNum = vInt;
+	this->data = cvInt;
+};
+
+GameEntity::CompVar::CompVar(float vFloat)
+{
+	this->vFloatNum = vFloat;
+	data = cvFloat;
+};
+
+GameEntity::CompVar::CompVar(Math::matrix44* vMat)
+{
+	this->vMatrix = vMat;
+	data = cvMatrix;
+};
+
+GameEntity::CompVar::CompVar(Util::StringAtom* vStrAtom)
+{
+	this->vStrAtom = vStrAtom;
+	data = cvStringAtom;
+};
+
+GameEntity::CompVar::CompVar(Graphics::GraphicsEntityId vGEID)
+{
+	this->vGEIDref = vGEID;
+	data = cvGEID;
+};
+
+GameEntity::CompVar::CompVar(const CompVar& ref)
+{
+	this->Copy(ref);
+};
+
+GameEntity::CompVar::~CompVar()
+{
+	//this->Delete();
+}
+
+void GameEntity::CompVar::Delete()
+{
+	if (this->data == cvMatrix)
+	{
+		n_delete(this->vMatrix);
+		this->vMatrix = 0;
+	}
+
+	else if (this->data == cvStringAtom)
+	{
+		n_assert(this->vStrAtom);
+		n_delete(this->vStrAtom);
+		this->vStrAtom = 0;
+	}
+}
+
+void GameEntity::CompVar::Copy(const CompVar& cv)
+{
+	this->data = cv.data;
+
+	switch (cv.data)
+	{
+		case cvInt:
+			this->vIntNum = cv.vIntNum;
+			break;
+
+		case cvFloat:
+			this->vFloatNum = cv.vFloatNum;
+			break;
+
+		case cvMatrix:
+			this->vMatrix = n_new(Math::matrix44);
+			this->vMatrix = cv.vMatrix;
+			break;
+
+		case cvStringAtom:
+			this->vStrAtom = n_new(Util::StringAtom);
+			this->vStrAtom = cv.vStrAtom;
+			break;
+
+		case cvGEID:
+			this->vGEIDref = cv.vGEIDref;
+			break;
+	}
+};
+
+void GameEntity::CompVar::operator=(const CompVar& type)
+{
+	//this->Delete();
+	this->Copy(type);
+};

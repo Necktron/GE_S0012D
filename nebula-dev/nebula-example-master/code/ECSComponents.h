@@ -57,6 +57,7 @@ public:
 	//What to do when you recieve a message
 	virtual void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
 	virtual void Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg);
+	virtual void Init(Graphics::GraphicsEntityId GEIDREF, float x, float y, float z, float moveX, float moveY, float moveZ, bool reg);
 	virtual void Update();
 	virtual void Shutdown();
 	virtual void MSGRecieve(ECSMSG::ECSMSGTypes msg);
@@ -70,10 +71,14 @@ public:
 	float movePosX = 0;
 	float movePosY = 0;
 	float movePosZ = 0;
+	float xVal = 0;
+	float yVal = 0;
+	float zVal = 0;
 
 	TransComp();
 	~TransComp();
 	void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
+	void Init(Graphics::GraphicsEntityId GEIDREF, float x, float y, float z, float moveX, float moveY, float moveZ, bool reg);
 	void Update();
 	void Shutdown();
 	void MSGRecieve(ECSMSG::ECSMSGTypes msg);

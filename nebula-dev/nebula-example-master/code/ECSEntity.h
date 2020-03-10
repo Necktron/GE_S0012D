@@ -24,25 +24,74 @@ using namespace Debug;
 class GameEntity
 {
 
-	//TODO: ADD HASTH TABLE OF VARIABLES FOR ALL COMPONENTS
+//TODO: ADD HASTH TABLE OF VARIABLES FOR ALL COMPONENTS
 public:
+
+	struct Loadout
+	{
+		Util::StringAtom loMesh;
+		Util::StringAtom loAnim;
+		Util::StringAtom loSkel;
+	};
+
+	struct CompVar
+	{
+		enum Data
+		{
+			cvInt = 0,
+			cvFloat = 1,
+			cvMatrix = 2,
+			cvStringAtom = 3,
+			cvGEID = 4,
+		};
+
+		Data data;
+
+		union
+		{
+			int vIntNum = 0;
+			float vFloatNum;
+			Util::StringAtom* vStrAtom;
+			Math::matrix44* vMatrix;
+			Graphics::GraphicsEntityId vGEIDref;
+		};
+
+		CompVar();
+		CompVar(int vInt);
+		CompVar(float vFloat);
+		CompVar(Math::matrix44* vMat);
+		CompVar(Util::StringAtom* vStrAtom);
+		CompVar(Graphics::GraphicsEntityId vGEID);
+		CompVar(const CompVar& ref);
+		~CompVar();
+
+		void Delete();
+		void Copy(const CompVar& cv);
+		void operator=(const CompVar& type);
+	};
+
 	Util::StringAtom entName;
 	int entID;
 	Util::Array<ComponentCore*> compList;
 	bool T_instance = false;
 	bool G_instance = false;
 	bool registered = false;
+	CompVar cv;
+	Loadout lo;
+	Util::Dictionary<Util::StringAtom, CompVar> varLibrary;
 
 	enum Models
 	{
 		King = 0,
-		Footman = 1
+		Footman = 1,
+		Spearman = 2
 	};
 
-	Util::StringAtom meshResource;
-	Util::StringAtom animResource;
-	Util::StringAtom skeletonResource;
-	Graphics::GraphicsEntityId GEID;
+	// Put in varLib
+	//Util::StringAtom meshResource;
+	//Util::StringAtom animResource;
+	//Util::StringAtom skeletonResource;
+	//Graphics::GraphicsEntityId GEID;
 
 	GameEntity(Util::StringAtom name);
 
@@ -61,6 +110,13 @@ public:
 	void MSGSend(ComponentCore* recieverComp, ECSMSG::ECSMSGTypes msg);
 
 	ComponentCore* FindComp(Util::StringAtom compSearch);
+
+	void AddCompVar(Util::StringAtom key, CompVar value);
+
+	void SetVar(Util::StringAtom varName, CompVar newValue);
+
+	CompVar* GetVar(Util::StringAtom varName);
+	//void DelCompVar(Util::StringAtom key);
 
 	//Add Comp to array
 	void AddComp(Util::StringAtom compToAdd);

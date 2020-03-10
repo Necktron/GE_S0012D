@@ -27,8 +27,6 @@ void EntityManager::Shutdown()
 		entities[0] = NULL;
 		entities.EraseFront();
 	}
-
-	delete this;
 }
 
 GameEntity* EntityManager::FindEnt(Util::StringAtom entitySearch)

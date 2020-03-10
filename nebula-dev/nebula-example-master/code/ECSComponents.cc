@@ -16,7 +16,12 @@ void ComponentCore::Init(Graphics::GraphicsEntityId GEIDREF, bool reg)
 
 void ComponentCore::Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg)
 {
-	//Init
+	//Init the BaseCompClass
+}
+
+void ComponentCore::Init(Graphics::GraphicsEntityId GEIDREF, float x, float y, float z, float moveX, float moveY, float moveZ, bool reg)
+{
+	//Init the BaseCompClass
 }
 
 void ComponentCore::Update()
@@ -43,6 +48,11 @@ TransComp::TransComp()
 TransComp::~TransComp()
 {
 	//Destructor
+	ObservableContext::DeregisterEntity(this->GEID);
+	ModelContext::DeregisterEntity(this->GEID);
+	Graphics::DeregisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(this->GEID);
+	ObservableContext::Destroy();
+	ModelContext::Destroy();
 }
 
 void TransComp::Init(Graphics::GraphicsEntityId GEIDREF, bool reg)
@@ -55,16 +65,32 @@ void TransComp::Init(Graphics::GraphicsEntityId GEIDREF, bool reg)
 		Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(this->GEID);
 	}
 
-	int xVal = Math::n_rand(0, 10);
-	int yVal = Math::n_rand(0, 10);
-	int zVal = Math::n_rand(0, 10);
+	ModelContext::SetTransform(this->GEID, this->transform.translation(Math::point(0, 0, 0)));
+}
+
+void TransComp::Init(Graphics::GraphicsEntityId GEIDREF, float x, float y, float z, float moveX, float moveY, float moveZ, bool reg)
+{
+	if (this->GEID == NULL)
+		this->GEID = GEIDREF;
+	//Init TransComp, overrides BaseCompClass
+	if (reg == false)
+	{
+		Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(this->GEID);
+	}
+
+	xVal = x;
+	yVal = y;
+	zVal = z;
+	movePosX = moveX;
+	movePosY = moveY;
+	movePosZ = moveZ;
 
 	ModelContext::SetTransform(this->GEID, this->transform.translation(Math::point(xVal, yVal, zVal)));
 }
 
 void TransComp::Update()
 {
-	ModelContext::SetTransform(this->GEID, this->transform.translation(Math::point(movePosX, movePosY, movePosZ)));
+	ModelContext::SetTransform(this->GEID, this->transform.translation(Math::point(xVal + movePosX, yVal + movePosY, zVal + movePosZ)));
 }
 
 void TransComp::Shutdown()
@@ -160,7 +186,7 @@ void GraphicalComp::Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom me
 
 void GraphicalComp::Update()
 {
-	Characters::CharacterContext::PauseTrack(this->GEID, 0);
+
 }
 
 void GraphicalComp::Shutdown()

@@ -261,66 +261,140 @@ namespace Example
 
         EntityManager* neckManager = new EntityManager;
         ComponentCore* neckComp = new ComponentCore;
+        GameEntity::CompVar* neckVar;
 
-        neckManager->AddEnt("Peasent", GameEntity::Models::Footman);
-        neckManager->AddEnt("King1", GameEntity::Models::King);
-        neckManager->AddEnt("King2", GameEntity::Models::King);
-        neckManager->AddEnt("King3", GameEntity::Models::King);
-        neckManager->AddEnt("King4", GameEntity::Models::King);
-        neckManager->AddEnt("King5", GameEntity::Models::King);
-        neckManager->AddEnt("King6", GameEntity::Models::King);
-        neckManager->AddEnt("King7", GameEntity::Models::King);
-        neckManager->AddEnt("King8", GameEntity::Models::King);
-        
-        for (int i = 0; i < neckManager->entities.size(); i++)
-        {
-            neckManager->entities[i]->AddComp("TransformComp");
-            neckManager->entities[i]->AddComp("GraphicalComp");
-        }
-
-        neckManager->Init();
-        //Comment
-        //neckManager->Shutdown();
-        //Comment
-        Graphics::GraphicsEntityId exampleEntity = Graphics::CreateEntity();
+        Graphics::GraphicsEntityId world = Graphics::CreateEntity();
         // Register entity to various graphics contexts.
         // The template parameters are which contexts that the entity should be registered to.
         // ModelContext takes care of loading models and also handles transforms for instances of models.
         // Registering an entity to the ObservableContext will allow cameras to observe the entity (adds the entity to visibility culling system)
-        Graphics::RegisterEntity<ModelContext, ObservableContext>(exampleEntity);
-        // Setup the entitys model instance
-        ModelContext::Setup(exampleEntity, "mdl:system/placeholder.n3", "Examples");
-        // Set the transform of the entity
-        ModelContext::SetTransform(exampleEntity, Math::matrix44::translation(Math::point(0, 0, 0)));
-        // Setup the observable as a model
-        ObservableContext::Setup(exampleEntity, VisibilityEntityType::Model);
+        Graphics::RegisterEntity<ModelContext, ObservableContext>(world);
+        ModelContext::Setup(world, "mdl:environment/Groundplane.n3", "Examples");
+        ModelContext::SetTransform(world, Math::matrix44::translation(Math::point(0, 0, 0)));
+        ObservableContext::Setup(world, VisibilityEntityType::Model);
 
-        // Example animated entity
-        Graphics::GraphicsEntityId animatedEntity = Graphics::CreateEntity();
-        // The CharacterContext holds skinned, animated entites and takes care of playing animations etc.
-        Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(animatedEntity);
-        // create model and move it to the front
+        neckManager->AddEnt("King", GameEntity::Models::King);
+        neckManager->AddEnt("ArmyGuy2", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy3", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy4", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy5", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy6", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy7", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy8", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy9", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy10", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy11", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy12", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy13", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy14", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy15", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy16", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy17", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy18", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy19", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy20", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy21", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy22", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy23", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy24", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy25", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy26", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy27", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy28", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy29", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy30", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy31", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy32", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy33", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy34", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy35", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy36", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy37", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy38", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy39", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy40", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy41", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy42", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy43", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy44", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy45", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy46", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy47", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy48", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy49", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy50", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy51", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy51", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy52", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy53", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy54", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy55", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy56", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy57", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy58", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy59", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy60", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy61", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy61", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy62", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy63", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy64", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy65", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy66", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy67", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy68", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy69", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy70", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy71", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy71", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy72", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy73", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy74", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy75", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy76", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy77", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy78", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy79", GameEntity::Models::Spearman);
+        neckManager->AddEnt("ArmyGuy80", GameEntity::Models::Spearman);
 
-        ModelContext::Setup(animatedEntity, "mdl:Units/Unit_Footman.n3", "Examples");
-        ModelContext::SetTransform(animatedEntity, Math::matrix44::translation(Math::point(5, 0, 0)));
-        ObservableContext::Setup(animatedEntity, VisibilityEntityType::Model);
-        // Setup the character context instance.
-        // nsk3 is the skeleton resource, nax3 is the animation resource. nax3 files can contain multiple animation clips
-        Characters::CharacterContext::Setup(animatedEntity, "ske:Units/Unit_Footman.nsk3", "ani:Units/Unit_Footman.nax3", "Examples");
-        Characters::CharacterContext::PlayClip(animatedEntity, nullptr, 0, 0, Characters::Append, 1.0f, 1, Math::n_rand() * 100.0f, 0.0f, 0.0f, Math::n_rand() * 100.0f);
-        
-        // Example animated entity
-        Graphics::GraphicsEntityId soldier = Graphics::CreateEntity();
-        // The CharacterContext holds skinned, animated entites and takes care of playing animations etc.
-        Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(soldier);
-        // create model and move it to the front
-        ModelContext::Setup(soldier, "mdl:Units/Unit_King.n3", "Examples");
-        ModelContext::SetTransform(soldier, Math::matrix44::translation(Math::point(10, 0, 0)));
-        ObservableContext::Setup(soldier, VisibilityEntityType::Model);
-        // Setup the character context instance.
-        // nsk3 is the skeleton resource, nax3 is the animation resource. nax3 files can contain multiple animation clips
-        Characters::CharacterContext::Setup(soldier, "ske:Units/Unit_King.nsk3", "ani:Units/Unit_King.nax3", "Examples");
-        Characters::CharacterContext::PlayClip(soldier, nullptr, 0, 0, Characters::Append, 1.0f, 1, Math::n_rand() * 100.0f, 0.0f, 0.0f, Math::n_rand() * 100.0f);
+        int counter = 0;
+        int k = 0;
+        int j = 0;
+
+        for (int i = 0; i < neckManager->entities.size(); i++)
+        {
+            if (i == 0)
+            {
+                k--;
+            }
+
+            if (counter >= 10)
+            {
+                counter = 0;
+                k = 0;
+                j++;
+            }
+
+            neckManager->entities[i]->AddComp("TransformComp");
+            neckManager->entities[i]->AddComp("GraphicalComp");
+            neckManager->entities[i]->AddCompVar("meshResource", n_new(Util::StringAtom("none")));
+            neckManager->entities[i]->AddCompVar("meshResource", n_new(Util::StringAtom("none")));
+            neckManager->entities[i]->AddCompVar("animResource", n_new(Util::StringAtom("nothing")));
+            neckManager->entities[i]->AddCompVar("skeletonResource", n_new(Util::StringAtom("nope")));
+            neckManager->entities[i]->AddCompVar("GEID", i);
+            neckManager->entities[i]->AddCompVar("transform", n_new(Math::matrix44));
+            neckManager->entities[i]->AddCompVar("movePosX", 0.0f);
+            neckManager->entities[i]->AddCompVar("movePosY", 0.0f);
+            neckManager->entities[i]->AddCompVar("movePosZ", 0.0f);
+            neckManager->entities[i]->AddCompVar("xVal", k * 2.5f);
+            neckManager->entities[i]->AddCompVar("yVal", 0.0f);
+            neckManager->entities[i]->AddCompVar("zVal", -150.0f + (j * -2.5f));
+            k++;
+            counter++;
+
+        }
+
+        neckManager->Init();
 
         // Create a point light entity
         Graphics::GraphicsEntityId pointLight = Graphics::CreateEntity();
@@ -341,6 +415,13 @@ namespace Example
             this->coreServer->Trigger();
 
             //neckManager->Update();
+            for (int i = 1; i < neckManager->entities.size(); i++)
+            {
+                if (neckManager->entities[i]->T_instance)
+                {
+                    neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
+                }
+            }
 
             this->inputServer->BeginFrame();
             this->inputServer->OnFrame();
@@ -366,6 +447,9 @@ namespace Example
             // put game code which needs rendering to be done (animation etc) here
             this->gfxServer->EndViews();
 
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::K) && neckManager->entities.size() > 0)
+                neckManager->Shutdown();
+
             // do stuff after rendering is done
             this->gfxServer->EndFrame();
 
@@ -379,16 +463,19 @@ namespace Example
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::F8))
                 Resources::ResourceManager::Instance()->ReloadResource("shd:imgui.fxb");
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::W))
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::W) && neckManager->entities.size() > 0)
                 neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::S))
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::S) && neckManager->entities.size() > 0)
                 neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkBack);
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::A))
-                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkLeft);
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::A) && neckManager->entities.size() > 0)
+                //for (int i = 0; i < neckManager->entities.size(); i++)
+                //{
+                    neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkLeft);
+                //}
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::D))
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::D) && neckManager->entities.size() > 0)
                 neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkRight);
 
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::F1))
