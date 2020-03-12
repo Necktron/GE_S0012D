@@ -32,7 +32,6 @@
 #include "io/fswrapper.h"
 #include "system/nebulasettings.h"
 #include "profiling/profiling.h"
-#include "ECS.h"
 
 #ifdef __WIN32__
 #include <shellapi.h>
@@ -259,8 +258,10 @@ namespace Example
         const Ptr<Input::Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
         const Ptr<Input::Mouse>& mouse = inputServer->GetDefaultMouse();
 
-        EntityManager* neckManager = new EntityManager;
-        ComponentCore* neckComp = new ComponentCore;
+        EntityManager* neckManager;
+        neckManager = &neckManager->getInstance();
+        ComponentCore* neckComp;
+        neckComp->Create();
         GameEntity::CompVar* neckVar;
 
         Graphics::GraphicsEntityId world = Graphics::CreateEntity();
@@ -274,88 +275,12 @@ namespace Example
         ObservableContext::Setup(world, VisibilityEntityType::Model);
 
         neckManager->AddEnt("King", GameEntity::Models::King);
-        neckManager->AddEnt("ArmyGuy2", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy3", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy4", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy5", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy6", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy7", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy8", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy9", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy10", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy11", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy12", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy13", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy14", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy15", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy16", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy17", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy18", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy19", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy20", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy21", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy22", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy23", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy24", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy25", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy26", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy27", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy28", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy29", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy30", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy31", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy32", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy33", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy34", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy35", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy36", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy37", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy38", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy39", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy40", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy41", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy42", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy43", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy44", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy45", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy46", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy47", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy48", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy49", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy50", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy51", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy51", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy52", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy53", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy54", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy55", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy56", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy57", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy58", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy59", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy60", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy61", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy61", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy62", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy63", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy64", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy65", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy66", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy67", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy68", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy69", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy70", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy71", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy71", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy72", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy73", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy74", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy75", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy76", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy77", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy78", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy79", GameEntity::Models::Spearman);
-        neckManager->AddEnt("ArmyGuy80", GameEntity::Models::Spearman);
+        Util::StringAtom entNum;
+
+        for (int c = 0; c < 80; c++)
+        {
+            neckManager->AddEnt("ArmyGuy" +Util::String::FromInt(c), GameEntity::Models::Spearman);
+        }
 
         int counter = 0;
         int k = 0;
@@ -377,22 +302,13 @@ namespace Example
 
             neckManager->entities[i]->AddComp("TransformComp");
             neckManager->entities[i]->AddComp("GraphicalComp");
-            neckManager->entities[i]->AddCompVar("meshResource", n_new(Util::StringAtom("none")));
-            neckManager->entities[i]->AddCompVar("meshResource", n_new(Util::StringAtom("none")));
-            neckManager->entities[i]->AddCompVar("animResource", n_new(Util::StringAtom("nothing")));
-            neckManager->entities[i]->AddCompVar("skeletonResource", n_new(Util::StringAtom("nope")));
-            neckManager->entities[i]->AddCompVar("GEID", i);
-            neckManager->entities[i]->AddCompVar("transform", n_new(Math::matrix44));
-            neckManager->entities[i]->AddCompVar("movePosX", 0.0f);
-            neckManager->entities[i]->AddCompVar("movePosY", 0.0f);
-            neckManager->entities[i]->AddCompVar("movePosZ", 0.0f);
-            neckManager->entities[i]->AddCompVar("xVal", k * 2.5f);
-            neckManager->entities[i]->AddCompVar("yVal", 0.0f);
-            neckManager->entities[i]->AddCompVar("zVal", -150.0f + (j * -2.5f));
             k++;
             counter++;
-
         }
+
+        neckManager->entities[0]->SetVar("xVal", 0.0f);
+        neckManager->entities[0]->SetVar("zVal", 10.0f);
+        neckManager->entities[0]->SetVar("transform", n_new(Math::matrix44));
 
         neckManager->Init();
 
@@ -470,10 +386,7 @@ namespace Example
                 neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkBack);
 
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::A) && neckManager->entities.size() > 0)
-                //for (int i = 0; i < neckManager->entities.size(); i++)
-                //{
-                    neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkLeft);
-                //}
+                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkLeft);
 
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::D) && neckManager->entities.size() > 0)
                 neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkRight);

@@ -5,6 +5,7 @@
     
     (C) 2020 Individual contributors, see AUTHORS file
 */
+
 #include "app/application.h"
 #include "renderutil/mayacamerautil.h"
 #include "renderutil/freecamerautil.h"
@@ -22,6 +23,7 @@
 #include "http/httpclientregistry.h"
 #include "core/coreserver.h"
 #include "io/iointerface.h"
+#include "ECS.h"
 
 namespace Example
 {

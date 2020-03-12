@@ -1,7 +1,6 @@
 #pragma once
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
-#endif
 #include <iostream>
 #include <vector>
 #include <math.h>
@@ -9,7 +8,6 @@
 #include <sstream>
 #include <stdio.h>
 #include <typeinfo>
-#include "ECSEntity.h"
 #include "stdneb.h"
 #include "core/refcounted.h"
 #include "timing/timer.h"
@@ -40,6 +38,8 @@
 #include "io/fswrapper.h"
 #include "system/nebulasettings.h"
 #include "profiling/profiling.h"
+#include "core/factory.h"
+#include "ECSEntity.h"
 
 using namespace Timing;
 using namespace Graphics;
@@ -49,17 +49,28 @@ using namespace IO;
 using namespace Http;
 using namespace Debug;
 
+class GameEntity;
+
 class EntityManager
 {
 public:
+
+	static EntityManager& getInstance()
+	{
+		static EntityManager instance;
+		return instance;
+	}
+
 	Util::Array<GameEntity*> entities;
 
+	EntityManager();
 	void Init();
 	void Update();
 	void Shutdown();
 	GameEntity* FindEnt(Util::StringAtom entitySearch);
 	bool AddEnt(Util::StringAtom entityName);
-	bool AddEnt(Util::StringAtom entityName, GameEntity::Models loadout);
+	bool AddEnt(Util::StringAtom entityName, int loadout);
 	void DelEnt(Util::StringAtom entToDel);
 };
 //namespace std
+#endif

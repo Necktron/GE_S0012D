@@ -1,7 +1,6 @@
 #pragma once
 #ifndef GAMEENTITY_H
 #define GAMEENTITY_H
-#endif
 
 #include <iostream>
 #include <vector>
@@ -21,12 +20,13 @@ using namespace IO;
 using namespace Http;
 using namespace Debug;
 
-class GameEntity
+class ComponentCore;
+
+class GameEntity : public Core::RefCounted
 {
+	__DeclareClass(Core::RefCounted);
 
-//TODO: ADD HASTH TABLE OF VARIABLES FOR ALL COMPONENTS
 public:
-
 	struct Loadout
 	{
 		Util::StringAtom loMesh;
@@ -34,8 +34,11 @@ public:
 		Util::StringAtom loSkel;
 	};
 
-	struct CompVar
+	struct CompVar : public Core::RefCounted
 	{
+		__DeclareClass(Core::RefCounted);
+
+	public:
 		enum Data
 		{
 			cvInt = 0,
@@ -87,15 +90,10 @@ public:
 		Spearman = 2
 	};
 
-	// Put in varLib
-	//Util::StringAtom meshResource;
-	//Util::StringAtom animResource;
-	//Util::StringAtom skeletonResource;
-	//Graphics::GraphicsEntityId GEID;
 
+	GameEntity();
 	GameEntity(Util::StringAtom name);
-
-	GameEntity(Util::StringAtom name, Models loadout);
+	GameEntity(Util::StringAtom name, int loadout);
 	~GameEntity();
 
 	//Init the GameEntity
@@ -116,7 +114,6 @@ public:
 	void SetVar(Util::StringAtom varName, CompVar newValue);
 
 	CompVar* GetVar(Util::StringAtom varName);
-	//void DelCompVar(Util::StringAtom key);
 
 	//Add Comp to array
 	void AddComp(Util::StringAtom compToAdd);
@@ -124,3 +121,4 @@ public:
 	//Del Comp to array
 	void DelComp(Util::StringAtom compToDel);
 };
+#endif

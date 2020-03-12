@@ -1,17 +1,22 @@
 #include "ECSEntity.h"
 
+GameEntity::GameEntity()
+{
+	
+}
+
 GameEntity::GameEntity(Util::StringAtom name)
 {
-	entName = name;
+	this->entName = name;
 
 	lo.loMesh = "mdl:Units/Unit_Footman.n3";
 	lo.loAnim = "ani:Units/Unit_Footman.nax3";
 	lo.loSkel = "ske:Units/Unit_Footman.nsk3";
 }
 
-GameEntity::GameEntity(Util::StringAtom name, GameEntity::Models loadout)
+GameEntity::GameEntity(Util::StringAtom name, int loadout)
 {
-	entName = name;
+	this->entName = name;
 
 	if (loadout == 0)
 	{
@@ -44,21 +49,15 @@ void GameEntity::Init()
 {
 	CompVar test;
 	test = Graphics::CreateEntity();
-	SetVar("GEID", test.vGEIDref);
 
 	//Init the GameEntity components
 	for (int i = 0; i < compList.size(); i++)
 	{
 		if (compList[i]->compID == 1)
-			compList[i]->Init(this->varLibrary["GEID"].vGEIDref, this->varLibrary["xVal"].vFloatNum, this->varLibrary["yVal"].vFloatNum, this->varLibrary["zVal"].vFloatNum, this->varLibrary["movePosX"].vFloatNum, this->varLibrary["movePosY"].vFloatNum, this->varLibrary["movePosZ"].vFloatNum, this->registered);
+			compList[i]->Init(test.vGEIDref, this->registered);
 
 		else if (compList[i]->compID == 2)
-		{
-			SetVar("meshResource", n_new(Util::StringAtom(lo.loMesh)));
-			SetVar("animResource", n_new(Util::StringAtom(lo.loAnim)));
-			SetVar("skeletonResource", n_new(Util::StringAtom(lo.loSkel)));
-			compList[i]->Init(this->varLibrary["GEID"].vGEIDref, this->varLibrary["meshResource"].vStrAtom->Value(), this->varLibrary["animResource"].vStrAtom->Value(), this->varLibrary["skeletonResource"].vStrAtom->Value(), this->registered);
-		}
+			compList[i]->Init(test.vGEIDref, lo.loMesh, lo.loAnim, lo.loSkel, this->registered);
 
 		this->registered = true;
 	}
@@ -68,9 +67,7 @@ void GameEntity::Update()
 {
 	//Update the GameEntity components
 	for (int i = 0; i < compList.size(); i++)
-	{
 		compList[i]->Update();
-	}
 }
 
 void GameEntity::Shutdown()
@@ -79,7 +76,7 @@ void GameEntity::Shutdown()
 	while (compList.size() > 0)
 	{
 		compList[0]->Shutdown();
-		compList[0] = NULL;
+		compList[0] = nullptr;
 		compList.EraseFront();
 	}
 
@@ -108,34 +105,45 @@ ComponentCore* GameEntity::FindComp(Util::StringAtom compSearch)
 	{
 		//If it's a transform comp
 		if (T_instance == true && compSearch == "TransformComp" && compList[i]->compID == 1)
-		{
 			return compList[i];
-		}
 
 		//If it's a graphics comp
 		else if (G_instance == true && compSearch == "GraphicalComp" && compList[i]->compID == 2)
-		{
 			return compList[i];
-		}
 	}
 
 	n_printf("Could not find the requested components. It's avalible for adding or is missing\n");
-	return 0;
+	return nullptr;
 }
 
 void GameEntity::AddCompVar(Util::StringAtom key, CompVar value)
 {
-	CompVar valToAdd = CompVar(value);
-
 	if (this->varLibrary.Contains(key))
-	{
 		n_printf("This key already exsists! Can't add pair value!");
-	}
 
 	else
-	{
-		this->varLibrary.Add(key, value);
-	}
+		switch (value.data)
+		{
+		case CompVar::cvInt:
+			this->varLibrary.Add(key, value.vIntNum);
+			break;
+
+		case CompVar::cvFloat:
+			this->varLibrary.Add(key, value.vFloatNum);
+			break;
+
+		case CompVar::cvMatrix:
+			this->varLibrary.Add(key, value.vMatrix);
+			break;
+
+		case CompVar::cvStringAtom:
+			this->varLibrary.Add(key, value.vStrAtom);
+			break;
+
+		case CompVar::cvGEID:
+			this->varLibrary.Add(key, value.vGEIDref);
+			break;
+		}
 }
 
 void GameEntity::SetVar(Util::StringAtom varName, CompVar newValue)
@@ -201,12 +209,11 @@ GameEntity::CompVar* GameEntity::GetVar(Util::StringAtom varName)
 				break;
 		}
 
-		return 0;*/
-				
+		return 0;*/	
 	}
 
 	n_printf("This key does not exsist! We can't retrieve the value!");
-	return 0;
+	return nullptr;
 }
 
 void GameEntity::AddComp(Util::StringAtom compToAdd)
@@ -214,7 +221,7 @@ void GameEntity::AddComp(Util::StringAtom compToAdd)
 	//If it's a transform comp
 	if (T_instance == false && compToAdd == "TransformComp")
 	{
-		TransComp* newTComp = new TransComp();
+		ComponentCore* newTComp = &TransComp::TransComp(this->entName);
 		compList.Append(newTComp);
 		T_instance = true;
 	}
@@ -222,15 +229,13 @@ void GameEntity::AddComp(Util::StringAtom compToAdd)
 	//If it's a graphics comp
 	else if (G_instance == false && compToAdd == "GraphicalComp")
 	{
-		GraphicalComp* newGComp = new GraphicalComp();
+		ComponentCore* newGComp = &GraphicalComp::GraphicalComp(this->entName);
 		compList.Append(newGComp);
 		G_instance = true;
 	}
 
 	else
-	{
 		n_printf("This component is already active! Can't have duplicates of component types!\n");
-	}
 }
 
 void GameEntity::DelComp(Util::StringAtom compToDel)
@@ -253,9 +258,7 @@ void GameEntity::DelComp(Util::StringAtom compToDel)
 		}
 
 		else
-		{
 			n_printf("The component was not found, try again!\n");
-		}
 	}
 }
 
@@ -268,7 +271,7 @@ GameEntity::CompVar::CompVar()
 GameEntity::CompVar::CompVar(int vInt)
 {
 	this->vIntNum = vInt;
-	this->data = cvInt;
+	data = cvInt;
 };
 
 GameEntity::CompVar::CompVar(float vFloat)

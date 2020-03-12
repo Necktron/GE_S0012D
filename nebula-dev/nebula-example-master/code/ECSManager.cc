@@ -1,5 +1,10 @@
 #include "ECSManager.h"
 
+EntityManager::EntityManager()
+{
+
+}
+
 void EntityManager::Init()
 {
 	//Init the EntityManagers enteties
@@ -24,7 +29,7 @@ void EntityManager::Shutdown()
 	while (entities.size() > 0)
 	{
 		entities[0]->Shutdown();
-		entities[0] = NULL;
+		entities[0] = nullptr;
 		entities.EraseFront();
 	}
 }
@@ -42,32 +47,36 @@ GameEntity* EntityManager::FindEnt(Util::StringAtom entitySearch)
 	}
 
 	n_printf("Could not find the requested entity. It's avalible for adding or is missing\n");
-	return 0;
+	return nullptr;
 }
 
 bool EntityManager::AddEnt(Util::StringAtom entityName)
 {
-	if (FindEnt(entityName) != 0)
+	if (FindEnt(entityName)->entName != 0)
 	{
 		n_printf("ERROR: Entity is already exsisting\n");
 		return false;
 	}
 
 	n_printf("No duplicates found, entity has been added!\n");
-	entities.Append(new GameEntity(entityName));
+	GameEntity* newEnt = &GameEntity::GameEntity(entityName);
+	entities.Append(newEnt);
 	return 1;
 }
 
-bool EntityManager::AddEnt(Util::StringAtom entityName, GameEntity::Models loadout)
+bool EntityManager::AddEnt(Util::StringAtom entityName, int loadout)
 {
-	if (FindEnt(entityName) != 0)
+	if (FindEnt(entityName)->entName != 0)
 	{
 		n_printf("ERROR: Entity is already exsisting\n");
 		return false;
 	}
 
+	//const Util::StringAtom newEnt = "GameEntity";
+	GameEntity* newEnt = &GameEntity::GameEntity(entityName);
+
 	n_printf("No duplicates found, entity has been added!\n");
-	entities.Append(new GameEntity(entityName, loadout));
+	entities.Append(newEnt);
 	return 1;
 }
 

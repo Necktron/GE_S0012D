@@ -1,7 +1,6 @@
 #pragma once
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
-#endif
 #include <iostream>
 #include <vector>
 #include <math.h>
@@ -40,6 +39,7 @@
 #include "system/nebulasettings.h"
 #include "profiling/profiling.h"
 #include "ECSMessage.h"
+#include "ECSManager.h"
 
 using namespace Timing;
 using namespace Graphics;
@@ -49,15 +49,21 @@ using namespace IO;
 using namespace Http;
 using namespace Debug;
 
-class ComponentCore
+class EntityManager;
+
+class ComponentCore : public Core::RefCounted
 {
+	__DeclareClass(Core::RefCounted);
+
 public:
+	//friend Core::RefCounted& friendRef(ComponentCore&);
+
 	int compID;
+	Util::StringAtom parentRef;
+	EntityManager* managerInst;
 	Graphics::GraphicsEntityId GEID = NULL;
-	//What to do when you recieve a message
 	virtual void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
 	virtual void Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg);
-	virtual void Init(Graphics::GraphicsEntityId GEIDREF, float x, float y, float z, float moveX, float moveY, float moveZ, bool reg);
 	virtual void Update();
 	virtual void Shutdown();
 	virtual void MSGRecieve(ECSMSG::ECSMSGTypes msg);
@@ -66,6 +72,8 @@ public:
 //WIP
 class TransComp : public ComponentCore
 {
+	__DeclareClass(Core::RefCounted);
+
 public:
 	Math::matrix44 transform;
 	float movePosX = 0;
@@ -75,10 +83,9 @@ public:
 	float yVal = 0;
 	float zVal = 0;
 
-	TransComp();
+	TransComp(Util::StringAtom parent);
 	~TransComp();
 	void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
-	void Init(Graphics::GraphicsEntityId GEIDREF, float x, float y, float z, float moveX, float moveY, float moveZ, bool reg);
 	void Update();
 	void Shutdown();
 	void MSGRecieve(ECSMSG::ECSMSGTypes msg);
@@ -91,15 +98,18 @@ public:
 //WIP
 class GraphicalComp : public ComponentCore
 {
+	__DeclareClass(Core::RefCounted);
+
 public:
 	Util::StringAtom meshResource = nullptr;
 	Util::StringAtom animResource = nullptr;
 	Util::StringAtom skeletonResource = nullptr;
 
-	GraphicalComp();
+	GraphicalComp(Util::StringAtom parent);
 	~GraphicalComp();
 	void Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg);
 	void Update();
 	void Shutdown();
 	void MSGRecieve(ECSMSG::ECSMSGTypes msg);
 };
+#endif
