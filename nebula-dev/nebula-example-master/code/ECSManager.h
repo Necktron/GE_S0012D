@@ -53,6 +53,8 @@ class GameEntity;
 
 class EntityManager
 {
+	__DeclareSingleton(EntityManager);
+
 public:
 
 	static EntityManager& getInstance()
@@ -63,6 +65,7 @@ public:
 
 	Util::Array<GameEntity*> entities;
 
+	EntityManager* managerInstance;
 	EntityManager();
 	void Init();
 	void Update();

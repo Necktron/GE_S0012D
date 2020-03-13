@@ -20,23 +20,24 @@ using namespace IO;
 using namespace Http;
 using namespace Debug;
 
+
 class ComponentCore;
 
 class GameEntity : public Core::RefCounted
 {
-	__DeclareClass(Core::RefCounted);
+	__DeclareClass(GameEntity);
 
 public:
 	struct Loadout
 	{
+		int loadoutID;
 		Util::StringAtom loMesh;
 		Util::StringAtom loAnim;
 		Util::StringAtom loSkel;
 	};
 
-	struct CompVar : public Core::RefCounted
+	struct CompVar
 	{
-		__DeclareClass(Core::RefCounted);
 
 	public:
 		enum Data

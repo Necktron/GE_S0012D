@@ -8,20 +8,24 @@ using namespace IO;
 using namespace Http;
 using namespace Debug;
 
+__ImplementClass(ComponentCore, '9012', Core::RefCounted);
+__ImplementClass(TransComp, '3456', ComponentCore);
+__ImplementClass(GraphicalComp, '7890', ComponentCore);
+
 //COMP CORE
 void ComponentCore::Init(Graphics::GraphicsEntityId GEIDREF, bool reg)
 {
-
+	
 }
 
 void ComponentCore::Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg)
 {
-	//Init the BaseCompClass
+	
 }
 
 void ComponentCore::Update()
 {
-	//Update the BaseCompClass
+
 }
 
 void ComponentCore::Shutdown()
@@ -31,15 +35,33 @@ void ComponentCore::Shutdown()
 
 void ComponentCore::MSGRecieve(ECSMSG::ECSMSGTypes msg)
 {
-	//DERP
+
+}
+
+void ComponentCore::ForwardWalk()
+{
+	this->managerInst->entities[this->parentIDRef]->SetVar("zVal", (this->managerInst->entities[this->parentIDRef]->GetVar("zVal")->vFloatNum + 0.2f));
+}
+
+void ComponentCore::BackWalk()
+{
+	this->managerInst->entities[this->parentIDRef]->SetVar("zVal", (this->managerInst->entities[this->parentIDRef]->GetVar("zVal")->vFloatNum - 0.2f));
+}
+
+void ComponentCore::RightWalk()
+{
+	this->managerInst->entities[this->parentIDRef]->SetVar("xVal", (this->managerInst->entities[this->parentIDRef]->GetVar("xVal")->vFloatNum - 0.2f));
+}
+
+void ComponentCore::LeftWalk()
+{
+	this->managerInst->entities[this->parentIDRef]->SetVar("xVal", (this->managerInst->entities[this->parentIDRef]->GetVar("xVal")->vFloatNum + 0.2f));
 }
 
 //TRANS COMP
-TransComp::TransComp(Util::StringAtom parent)
+TransComp::TransComp()
 {
-	this->parentRef = parent;
-	this->compID = 1;
-	this->managerInst = &this->managerInst->getInstance();
+
 }
 
 TransComp::~TransComp()
@@ -54,43 +76,38 @@ TransComp::~TransComp()
 
 void TransComp::Init(Graphics::GraphicsEntityId GEIDREF, bool reg)
 {
+	//Look at ComponentCore Init
+	this->managerInst = &this->managerInst->getInstance();
+
 	for (int i = 0; i < this->managerInst->entities.size(); i++)
 	{
-		if (this->managerInst->entities[i]->entName == this->parentRef)
+		if (this->managerInst->entities[i]->entName == this->parentNameRef)
 		{
 			this->managerInst->entities[i]->AddCompVar("transform", n_new(Math::matrix44));
-			this->managerInst->entities[i]->AddCompVar("movePosX", 0.0f);
-			this->managerInst->entities[i]->AddCompVar("movePosY", 0.0f);
-			this->managerInst->entities[i]->AddCompVar("movePosZ", 0.0f);
 			this->managerInst->entities[i]->AddCompVar("xVal", 0.0f);
 			this->managerInst->entities[i]->AddCompVar("yVal", 0.0f);
 			this->managerInst->entities[i]->AddCompVar("zVal", 0.0f);
 
 			if (this->GEID == NULL)
 			{
-				this->managerInst->entities[i]->AddCompVar("GEID", GEIDREF);
-				this->GEID = this->managerInst->entities[i]->GetVar("GEID")->vGEIDref;
+				this->GEID = GEIDREF;
 			}
+
+			if (this->managerInst->entities[i]->registered == false)
+				Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(GEIDREF);
 
 			xVal = this->managerInst->entities[i]->GetVar("xVal")->vFloatNum;
 			yVal = this->managerInst->entities[i]->GetVar("yVal")->vFloatNum;
 			zVal = this->managerInst->entities[i]->GetVar("zVal")->vFloatNum;
-			movePosX = this->managerInst->entities[i]->GetVar("movePosX")->vFloatNum;
-			movePosY = this->managerInst->entities[i]->GetVar("movePosY")->vFloatNum;
-			movePosZ = this->managerInst->entities[i]->GetVar("movePosZ")->vFloatNum;
 
-			if (reg == false)
-				Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(this->GEID);
-
-			ModelContext::SetTransform(this->GEID, this->transform.translation(Math::point(0, 0, 0)));
-			break;
+			ModelContext::SetTransform(this->GEID, this->managerInst->entities[i]->GetVar("transform")->vMatrix->translation(Math::point(xVal, yVal, zVal)));
 		}
 	}
 }
 
 void TransComp::Update()
 {
-	ModelContext::SetTransform(this->GEID, this->transform.translation(Math::point(xVal + movePosX, yVal + movePosY, zVal + movePosZ)));
+	ModelContext::SetTransform(this->GEID, this->transform.translation(Math::point(xVal, yVal, zVal)));
 }
 
 void TransComp::Shutdown()
@@ -133,30 +150,28 @@ void TransComp::MSGRecieve(ECSMSG::ECSMSGTypes msg)
 
 void TransComp::ForwardWalk()
 {
-	movePosZ += 0.2;
+	zVal += 0.2;
 }
 
 void TransComp::BackWalk()
 {
-	movePosZ -= 0.2;
+	zVal -= 0.2;
 }
 
 void TransComp::RightWalk()
 {
-	movePosX -= 0.2;
+	xVal -= 0.2;
 }
 
 void TransComp::LeftWalk()
 {
-	movePosX += 0.2;
+	xVal += 0.2;
 }
 
 //GRAPHICAL COMP
-GraphicalComp::GraphicalComp(Util::StringAtom parent)
+GraphicalComp::GraphicalComp()
 {
-	this->parentRef = parent;
-	this->compID = 2;
-	this->managerInst = &this->managerInst->getInstance();
+
 }
 
 GraphicalComp::~GraphicalComp()
@@ -166,9 +181,12 @@ GraphicalComp::~GraphicalComp()
 
 void GraphicalComp::Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg)
 {
+	this->managerInst = &this->managerInst->getInstance();
+
 	for (int i = 0; i < this->managerInst->entities.size(); i++)
 	{
-		if (this->managerInst->entities[i]->entName == this->parentRef)
+
+		if (this->managerInst->entities[i]->entName == this->parentNameRef)
 		{
 			this->managerInst->entities[i]->AddCompVar("meshResource", n_new(Util::StringAtom(mesh)));
 			this->managerInst->entities[i]->AddCompVar("animResource", n_new(Util::StringAtom(anim)));

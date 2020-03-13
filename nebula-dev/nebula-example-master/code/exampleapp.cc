@@ -50,6 +50,8 @@ using namespace Debug;
 namespace Example
 {
 
+    EntityManager* neckManager;
+
     //------------------------------------------------------------------------------
     /**
     */
@@ -258,8 +260,8 @@ namespace Example
         const Ptr<Input::Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
         const Ptr<Input::Mouse>& mouse = inputServer->GetDefaultMouse();
 
-        EntityManager* neckManager;
         neckManager = &neckManager->getInstance();
+
         ComponentCore* neckComp;
         neckComp->Create();
         GameEntity::CompVar* neckVar;
@@ -275,42 +277,23 @@ namespace Example
         ObservableContext::Setup(world, VisibilityEntityType::Model);
 
         neckManager->AddEnt("King", GameEntity::Models::King);
-        Util::StringAtom entNum;
-
-        for (int c = 0; c < 80; c++)
-        {
-            neckManager->AddEnt("ArmyGuy" +Util::String::FromInt(c), GameEntity::Models::Spearman);
-        }
-
-        int counter = 0;
-        int k = 0;
-        int j = 0;
-
-        for (int i = 0; i < neckManager->entities.size(); i++)
-        {
-            if (i == 0)
-            {
-                k--;
-            }
-
-            if (counter >= 10)
-            {
-                counter = 0;
-                k = 0;
-                j++;
-            }
-
-            neckManager->entities[i]->AddComp("TransformComp");
-            neckManager->entities[i]->AddComp("GraphicalComp");
-            k++;
-            counter++;
-        }
+        neckManager->entities[0]->AddComp("TransformComp");
+        neckManager->entities[0]->AddComp("GraphicalComp");
 
         neckManager->entities[0]->SetVar("xVal", 0.0f);
-        neckManager->entities[0]->SetVar("zVal", 10.0f);
+        neckManager->entities[0]->SetVar("zVal", 0.0f);
         neckManager->entities[0]->SetVar("transform", n_new(Math::matrix44));
 
+        neckManager->AddEnt("Derp", GameEntity::Models::Footman);
+        neckManager->entities[1]->AddComp("TransformComp");
+        neckManager->entities[1]->AddComp("GraphicalComp");
+
+        neckManager->entities[1]->SetVar("transform", n_new(Math::matrix44));
+
         neckManager->Init();
+
+        neckManager->entities[1]->SetVar("xVal", 0.0f);
+        neckManager->entities[1]->SetVar("zVal", -100.0f);
 
         // Create a point light entity
         Graphics::GraphicsEntityId pointLight = Graphics::CreateEntity();
@@ -331,11 +314,14 @@ namespace Example
             this->coreServer->Trigger();
 
             //neckManager->Update();
-            for (int i = 1; i < neckManager->entities.size(); i++)
+            if (neckManager->entities.size() > 1)
             {
-                if (neckManager->entities[i]->T_instance)
+                for (int i = 1; i < neckManager->entities.size(); i++)
                 {
-                    neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
+                    if (neckManager->entities[i]->T_instance)
+                    {
+                        neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
+                    }
                 }
             }
 
@@ -359,7 +345,7 @@ namespace Example
 
             // put game code which need visibility data here
             this->gfxServer->RenderViews();
-
+            
             // put game code which needs rendering to be done (animation etc) here
             this->gfxServer->EndViews();
 

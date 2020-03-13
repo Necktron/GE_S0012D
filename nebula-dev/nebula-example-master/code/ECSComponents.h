@@ -53,37 +53,37 @@ class EntityManager;
 
 class ComponentCore : public Core::RefCounted
 {
-	__DeclareClass(Core::RefCounted);
+	__DeclareClass(ComponentCore);
 
 public:
-	//friend Core::RefCounted& friendRef(ComponentCore&);
-
 	int compID;
-	Util::StringAtom parentRef;
+	Util::StringAtom parentNameRef;
+	int parentIDRef;
 	EntityManager* managerInst;
 	Graphics::GraphicsEntityId GEID = NULL;
+
 	virtual void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
 	virtual void Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg);
 	virtual void Update();
 	virtual void Shutdown();
 	virtual void MSGRecieve(ECSMSG::ECSMSGTypes msg);
+	virtual void ForwardWalk();
+	virtual void BackWalk();
+	virtual void RightWalk();
+	virtual void LeftWalk();
 };
 
 //WIP
 class TransComp : public ComponentCore
 {
-	__DeclareClass(Core::RefCounted);
-
+	__DeclareClass(TransComp);
 public:
 	Math::matrix44 transform;
-	float movePosX = 0;
-	float movePosY = 0;
-	float movePosZ = 0;
 	float xVal = 0;
 	float yVal = 0;
 	float zVal = 0;
 
-	TransComp(Util::StringAtom parent);
+	TransComp();
 	~TransComp();
 	void Init(Graphics::GraphicsEntityId GEIDREF, bool reg);
 	void Update();
@@ -98,14 +98,13 @@ public:
 //WIP
 class GraphicalComp : public ComponentCore
 {
-	__DeclareClass(Core::RefCounted);
-
+	__DeclareClass(GraphicalComp);
 public:
 	Util::StringAtom meshResource = nullptr;
 	Util::StringAtom animResource = nullptr;
 	Util::StringAtom skeletonResource = nullptr;
 
-	GraphicalComp(Util::StringAtom parent);
+	GraphicalComp();
 	~GraphicalComp();
 	void Init(Graphics::GraphicsEntityId GEIDREF, Util::StringAtom mesh, Util::StringAtom anim, Util::StringAtom skel, bool reg);
 	void Update();

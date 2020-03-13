@@ -1,43 +1,20 @@
 #include "ECSEntity.h"
 
+__ImplementClass(GameEntity, '1234', Core::RefCounted);
+
 GameEntity::GameEntity()
 {
-	
+
 }
 
 GameEntity::GameEntity(Util::StringAtom name)
 {
-	this->entName = name;
 
-	lo.loMesh = "mdl:Units/Unit_Footman.n3";
-	lo.loAnim = "ani:Units/Unit_Footman.nax3";
-	lo.loSkel = "ske:Units/Unit_Footman.nsk3";
 }
 
 GameEntity::GameEntity(Util::StringAtom name, int loadout)
 {
-	this->entName = name;
 
-	if (loadout == 0)
-	{
-		lo.loMesh = "mdl:Units/Unit_King.n3";
-		lo.loAnim = "ani:Units/Unit_King.nax3";
-		lo.loSkel = "ske:Units/Unit_King.nsk3";
-	}
-
-	else if (loadout == 1)
-	{
-		lo.loMesh = "mdl:Units/Unit_Footman.n3";
-		lo.loAnim = "ani:Units/Unit_Footman.nax3";
-		lo.loSkel = "ske:Units/Unit_Footman.nsk3";
-	}
-
-	else if (loadout == 2)
-	{
-		lo.loMesh = "mdl:Units/Unit_Spearman.n3";
-		lo.loAnim = "ani:Units/Unit_Spearman.nax3";
-		lo.loSkel = "ske:Units/Unit_Spearman.nsk3";
-	}
 }
 
 GameEntity::~GameEntity()
@@ -47,17 +24,40 @@ GameEntity::~GameEntity()
 
 void GameEntity::Init()
 {
-	CompVar test;
-	test = Graphics::CreateEntity();
+	CompVar test = Graphics::GraphicsEntityId();
+	test.vGEIDref = this->entID;
+
+	AddCompVar("GEID", test);
+
+	if (this->lo.loadoutID == 0)
+	{
+		this->lo.loMesh = "mdl:Units/Unit_King.n3";
+		this->lo.loAnim = "ani:Units/Unit_King.nax3";
+		this->lo.loSkel = "ske:Units/Unit_King.nsk3";
+	}
+
+	else if (this->lo.loadoutID == 1)
+	{
+		this->lo.loMesh = "mdl:Units/Unit_Footman.n3";
+		this->lo.loAnim = "ani:Units/Unit_Footman.nax3";
+		this->lo.loSkel = "ske:Units/Unit_Footman.nsk3";
+	}
+
+	else if (this->lo.loadoutID == 2)
+	{
+		this->lo.loMesh = "mdl:Units/Unit_Spearman.n3";
+		this->lo.loAnim = "ani:Units/Unit_Spearman.nax3";
+		this->lo.loSkel = "ske:Units/Unit_Spearman.nsk3";
+	}
 
 	//Init the GameEntity components
 	for (int i = 0; i < compList.size(); i++)
 	{
 		if (compList[i]->compID == 1)
-			compList[i]->Init(test.vGEIDref, this->registered);
+			compList[i]->Init(GetVar("GEID")->vGEIDref, this->registered);
 
 		else if (compList[i]->compID == 2)
-			compList[i]->Init(test.vGEIDref, lo.loMesh, lo.loAnim, lo.loSkel, this->registered);
+			compList[i]->Init(GetVar("GEID")->vGEIDref, this->lo.loMesh.Value(), this->lo.loAnim.Value(), this->lo.loSkel.Value(), this->registered);
 
 		this->registered = true;
 	}
@@ -186,30 +186,6 @@ GameEntity::CompVar* GameEntity::GetVar(Util::StringAtom varName)
 		n_printf("This key exsists! We can now retrieve the value of it!");
 
 		return &this->varLibrary[varName];
-		/*switch (this->varLibrary[varName].data)
-		{
-			case CompVar::cvInt:
-				return &this->varLibrary[varName];
-				break;
-
-			case CompVar::cvFloat:
-				return &this->varLibrary[varName];
-				break;
-
-			case CompVar::cvMatrix:
-				return &this->varLibrary[varName];
-				break;
-
-			case CompVar::cvStringAtom:
-				return &this->varLibrary[varName];
-				break;
-
-			case CompVar::cvGEID:
-				return &this->varLibrary[varName];
-				break;
-		}
-
-		return 0;*/	
 	}
 
 	n_printf("This key does not exsist! We can't retrieve the value!");
@@ -221,16 +197,24 @@ void GameEntity::AddComp(Util::StringAtom compToAdd)
 	//If it's a transform comp
 	if (T_instance == false && compToAdd == "TransformComp")
 	{
-		ComponentCore* newTComp = &TransComp::TransComp(this->entName);
+		TransComp* newTComp = TransComp::Create();
 		compList.Append(newTComp);
+		compList[compList.size() - 1]->parentNameRef = this->entName;
+		compList[compList.size() - 1]->parentIDRef = this->entID;
+		compList[compList.size() - 1]->compID = 1;
+
 		T_instance = true;
 	}
 
 	//If it's a graphics comp
 	else if (G_instance == false && compToAdd == "GraphicalComp")
 	{
-		ComponentCore* newGComp = &GraphicalComp::GraphicalComp(this->entName);
+		GraphicalComp* newGComp = GraphicalComp::Create();
 		compList.Append(newGComp);
+		compList[compList.size() - 1]->parentNameRef = this->entName;
+		compList[compList.size() - 1]->parentIDRef = this->entID;
+		compList[compList.size() - 1]->compID = 2;
+
 		G_instance = true;
 	}
 
