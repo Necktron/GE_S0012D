@@ -549,5 +549,4 @@ namespace Example
         Math::float4 pos = this->mayaCameraUtil.GetCameraTransform().get_position();
         this->freeCamUtil.Setup(pos, Math::float4::normalize(pos - this->mayaCameraUtil.GetCenterOfInterest()));
     }
-
 }

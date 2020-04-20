@@ -67,5 +67,4 @@ public:
 	bool AddEnt(Util::StringAtom entityName, int loadout);
 	void DelEnt(Util::StringAtom entToDel);
 };
-//namespace std
 #endif

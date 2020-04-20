@@ -19,6 +19,8 @@ inline void pyInit()
 	pyEM->entities[(pyEM->entCount - 1)]->AddComp("TransformComp");
 	pyEM->entities[(pyEM->entCount - 1)]->AddComp("GraphicalComp");
 
+	//TEST COMMENT FOR COMMIT
+
 	pyEM->entities[(pyEM->entCount - 1)]->AddCompVar("xVal", 2.0f);
 	pyEM->entities[(pyEM->entCount - 1)]->AddCompVar("zVal", 5.0f);
 	pyEM->entities[(pyEM->entCount - 1)]->AddCompVar("transform", n_new(Math::matrix44));
