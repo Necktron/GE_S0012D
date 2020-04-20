@@ -1,3 +1,4 @@
+#include "foundation/stdneb.h"
 #include "ECSComponents.h"
 
 using namespace Timing;
@@ -56,6 +57,16 @@ void ComponentCore::RightWalk()
 void ComponentCore::LeftWalk()
 {
 	this->managerInst->entities[this->parentIDRef]->SetVar("xVal", (this->managerInst->entities[this->parentIDRef]->GetVar("xVal")->vFloatNum + 0.2f));
+}
+
+void ComponentCore::Ascend()
+{
+	this->managerInst->entities[this->parentIDRef]->SetVar("yVal", (this->managerInst->entities[this->parentIDRef]->GetVar("yVal")->vFloatNum + 0.2f));
+}
+
+void ComponentCore::Descend()
+{
+	this->managerInst->entities[this->parentIDRef]->SetVar("yVal", (this->managerInst->entities[this->parentIDRef]->GetVar("yVal")->vFloatNum - 0.2f));
 }
 
 //TRANS COMP
@@ -146,6 +157,18 @@ void TransComp::MSGRecieve(ECSMSG::ECSMSGTypes msg)
 		RightWalk();
 		Update();
 	}
+
+	else if (msg == ECSMSG::ECSMSGTypes::Ascend)
+	{
+		Ascend();
+		Update();
+	}
+
+	else if (msg == ECSMSG::ECSMSGTypes::Descend)
+	{
+		Descend();
+		Update();
+	}
 }
 
 void TransComp::ForwardWalk()
@@ -166,6 +189,16 @@ void TransComp::RightWalk()
 void TransComp::LeftWalk()
 {
 	xVal += 0.2;
+}
+
+void TransComp::Ascend()
+{
+	yVal += 0.2;
+}
+
+void TransComp::Descend()
+{
+	yVal -= 0.2;
 }
 
 //GRAPHICAL COMP

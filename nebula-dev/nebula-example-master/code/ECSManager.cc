@@ -1,3 +1,4 @@
+#include "foundation/stdneb.h"
 #include "ECSManager.h"
 
 __ImplementSingleton(EntityManager);
@@ -80,6 +81,7 @@ bool EntityManager::AddEnt(Util::StringAtom entityName)
 	managerInstance->entities.Append(newEnt);
 	managerInstance->entities[managerInstance->entities.size()]->entName = entityName;
 	managerInstance->entities[managerInstance->entities.size()]->lo.loadoutID = 1;
+	managerInstance->entCount++;
 	return true;
 }
 
@@ -105,6 +107,7 @@ bool EntityManager::AddEnt(Util::StringAtom entityName, int loadout)
 	managerInstance->entities[managerInstance->entities.size() - 1]->entName = entityName;
 	managerInstance->entities[managerInstance->entities.size() - 1]->entID = managerInstance->entities.size() - 1;
 	managerInstance->entities[managerInstance->entities.size() - 1]->lo.loadoutID = loadout;
+	managerInstance->entCount++;
 	return true;
 }
 
@@ -118,6 +121,7 @@ void EntityManager::DelEnt(Util::StringAtom entToDel)
 			for(int i = 0; i < managerInstance->entities.size(); i++)
 				managerInstance->entities.Erase(&managerInstance->entities[i]);
 			n_printf("Entity has been found and deleted!");
+			managerInstance->entCount--;
 			return;
 		}
 	}

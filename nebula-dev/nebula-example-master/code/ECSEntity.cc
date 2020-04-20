@@ -1,3 +1,4 @@
+#include "foundation/stdneb.h"
 #include "ECSEntity.h"
 
 __ImplementClass(GameEntity, '1234', Core::RefCounted);

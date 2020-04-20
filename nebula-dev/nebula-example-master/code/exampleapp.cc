@@ -32,6 +32,7 @@
 #include "io/fswrapper.h"
 #include "system/nebulasettings.h"
 #include "profiling/profiling.h"
+#include "P2CP.h"
 
 #ifdef __WIN32__
 #include <shellapi.h>
@@ -262,10 +263,6 @@ namespace Example
 
         neckManager = &neckManager->getInstance();
 
-        ComponentCore* neckComp;
-        neckComp->Create();
-        GameEntity::CompVar* neckVar;
-
         Graphics::GraphicsEntityId world = Graphics::CreateEntity();
         // Register entity to various graphics contexts.
         // The template parameters are which contexts that the entity should be registered to.
@@ -276,24 +273,29 @@ namespace Example
         ModelContext::SetTransform(world, Math::matrix44::translation(Math::point(0, 0, 0)));
         ObservableContext::Setup(world, VisibilityEntityType::Model);
 
-        neckManager->AddEnt("King", GameEntity::Models::King);
-        neckManager->entities[0]->AddComp("TransformComp");
-        neckManager->entities[0]->AddComp("GraphicalComp");
+        /*
+            PYTHON INIT CREATION
+        */
 
-        neckManager->entities[0]->SetVar("xVal", 0.0f);
-        neckManager->entities[0]->SetVar("zVal", 0.0f);
-        neckManager->entities[0]->SetVar("transform", n_new(Math::matrix44));
+        pyInit();
+
+        neckManager->AddEnt("King", GameEntity::Models::King);
+        neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");
+        neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
+
+        neckManager->entities[(neckManager->entCount - 1)]->AddCompVar("xVal", 10.0f);
+        neckManager->entities[(neckManager->entCount - 1)]->AddCompVar("zVal", 0.0f);
+        neckManager->entities[(neckManager->entCount - 1)]->AddCompVar("transform", n_new(Math::matrix44));
 
         neckManager->AddEnt("Derp", GameEntity::Models::Footman);
-        neckManager->entities[1]->AddComp("TransformComp");
-        neckManager->entities[1]->AddComp("GraphicalComp");
+        neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");
+        neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
 
-        neckManager->entities[1]->SetVar("transform", n_new(Math::matrix44));
+        neckManager->entities[(neckManager->entCount - 1)]->AddCompVar("xVal", 5.0f);
+        neckManager->entities[(neckManager->entCount - 1)]->AddCompVar("zVal", -10.0f);
+        neckManager->entities[(neckManager->entCount - 1)]->AddCompVar("transform", n_new(Math::matrix44));
 
         neckManager->Init();
-
-        neckManager->entities[1]->SetVar("xVal", 0.0f);
-        neckManager->entities[1]->SetVar("zVal", -100.0f);
 
         // Create a point light entity
         Graphics::GraphicsEntityId pointLight = Graphics::CreateEntity();
@@ -312,18 +314,6 @@ namespace Example
 #endif
 
             this->coreServer->Trigger();
-
-            //neckManager->Update();
-            if (neckManager->entities.size() > 1)
-            {
-                for (int i = 1; i < neckManager->entities.size(); i++)
-                {
-                    if (neckManager->entities[i]->T_instance)
-                    {
-                        neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
-                    }
-                }
-            }
 
             this->inputServer->BeginFrame();
             this->inputServer->OnFrame();
@@ -349,9 +339,6 @@ namespace Example
             // put game code which needs rendering to be done (animation etc) here
             this->gfxServer->EndViews();
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::K) && neckManager->entities.size() > 0)
-                neckManager->Shutdown();
-
             // do stuff after rendering is done
             this->gfxServer->EndFrame();
 
@@ -365,17 +352,35 @@ namespace Example
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::F8))
                 Resources::ResourceManager::Instance()->ReloadResource("shd:imgui.fxb");
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::W) && neckManager->entities.size() > 0)
-                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
+            if (neckManager->entities.size() > 1)
+            {
+                for (int i = 0; i < neckManager->entities.size(); i++)
+                {
+                    if (neckManager->entities[i]->entName == "P1")
+                    {
+                        if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::W) && neckManager->entities.size() > 0)
+                            neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkForward);
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::S) && neckManager->entities.size() > 0)
-                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkBack);
+                        if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::S) && neckManager->entities.size() > 0)
+                            neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkBack);
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::A) && neckManager->entities.size() > 0)
-                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkLeft);
+                        if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::A) && neckManager->entities.size() > 0)
+                            neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkLeft);
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::D) && neckManager->entities.size() > 0)
-                neckManager->entities[0]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkRight);
+                        if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::D) && neckManager->entities.size() > 0)
+                            neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::WalkRight);
+
+                        if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::Space) && neckManager->entities.size() > 0)
+                            neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::Ascend);
+
+                        if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::LeftControl) && neckManager->entities.size() > 0)
+                            neckManager->entities[i]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::Descend);
+                    }
+                }
+            }
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::Q) && neckManager->entities.size() > 0)
+                neckManager->Shutdown();
 
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::F1))
             {

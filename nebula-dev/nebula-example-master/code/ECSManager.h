@@ -8,10 +8,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <typeinfo>
-#include "stdneb.h"
 #include "core/refcounted.h"
-#include "timing/timer.h"
-#include "io/console.h"
 #include "visibility/visibilitycontext.h"
 #include "models/streammodelpool.h"
 #include "models/modelcontext.h"
@@ -20,12 +17,6 @@
 #include "exampleapp.h"
 #include "math/vector.h"
 #include "math/point.h"
-#include "dynui/imguicontext.h"
-#include "lighting/lightcontext.h"
-#include "characters/charactercontext.h"
-#include "imgui.h"
-#include "dynui/im3d/im3dcontext.h"
-#include "dynui/im3d/im3d.h"
 #include "graphics/environmentcontext.h"
 #include "clustering/clustercontext.h"
 #include "io/debug/iopagehandler.h"
@@ -64,6 +55,7 @@ public:
 	}
 
 	Util::Array<GameEntity*> entities;
+	int entCount = 0;
 
 	EntityManager* managerInstance;
 	EntityManager();

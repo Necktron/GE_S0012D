@@ -10,13 +10,6 @@
 #include <typeinfo>
 #include "stdneb.h"
 #include "core/refcounted.h"
-#include "timing/timer.h"
-#include "io/console.h"
-#include "visibility/visibilitycontext.h"
-#include "models/streammodelpool.h"
-#include "models/modelcontext.h"
-#include "input/keyboard.h"
-#include "input/mouse.h"
 #include "exampleapp.h"
 #include "math/vector.h"
 #include "math/point.h"
@@ -71,6 +64,8 @@ public:
 	virtual void BackWalk();
 	virtual void RightWalk();
 	virtual void LeftWalk();
+	virtual void Ascend();
+	virtual void Descend();
 };
 
 //WIP
@@ -93,6 +88,8 @@ public:
 	void BackWalk();
 	void RightWalk();
 	void LeftWalk();
+	void Ascend();
+	void Descend();
 };
 
 //WIP

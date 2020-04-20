@@ -1,7 +1,6 @@
 #pragma once
 #ifndef MESSAGER_H
 #define MESSAGER_H
-#endif
 
 class ECSMSG
 {
@@ -13,6 +12,9 @@ public:
 		WalkLeft = 2,
 		WalkRight = 3,
 		WalkBack = 4,
-		UpdatePos = 5
+		Ascend = 5,
+		Descend = 6,
+		UpdatePos = 7
 	};
 };
+#endif
