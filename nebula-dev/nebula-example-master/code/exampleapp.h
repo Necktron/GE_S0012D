@@ -23,6 +23,8 @@
 #include "http/httpclientregistry.h"
 #include "core/coreserver.h"
 #include "io/iointerface.h"
+#include "scripting/scriptserver.h"
+#include "scripting/python/pythonserver.h"
 #include "ECS.h"
 
 namespace Example
@@ -80,6 +82,7 @@ protected:
 	Math::point defaultViewPoint{ 10.0f, 10.0f, 10.0f };
     
 #if __NEBULA_HTTP__
+    Ptr<Scripting::PythonServer> pythonSrv;
 	Ptr<Debug::DebugInterface> debugInterface;
 	Ptr<Http::HttpInterface> httpInterface;
 	Ptr<Http::HttpServerProxy> httpServerProxy;

@@ -52,6 +52,7 @@ namespace Example
 {
 
     EntityManager* neckManager;
+    P2CP pyNeb;
 
     //------------------------------------------------------------------------------
     /**
@@ -201,6 +202,8 @@ namespace Example
             // create environment context for the atmosphere effects
             EnvironmentContext::Create(this->globalLight);
 
+            this->pythonSrv = Scripting::PythonServer::Create();
+
             this->UpdateCamera();
 
             return true;
@@ -276,8 +279,9 @@ namespace Example
         /*
             PYTHON INIT CREATION
         */
-
-        pyInit();
+           
+        this->pythonSrv->Open();
+        this->pythonSrv->EvalFile("neckPyScript.py");
 
         neckManager->AddEnt("King", GameEntity::Models::King);
         neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");

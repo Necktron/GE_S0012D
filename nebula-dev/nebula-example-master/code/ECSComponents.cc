@@ -94,15 +94,20 @@ void TransComp::Init(Graphics::GraphicsEntityId GEIDREF, bool reg)
 	{
 		if (this->managerInst->entities[i]->entName == this->parentNameRef)
 		{
-			this->managerInst->entities[i]->AddCompVar("transform", n_new(Math::matrix44));
-			this->managerInst->entities[i]->AddCompVar("xVal", 0.0f);
-			this->managerInst->entities[i]->AddCompVar("yVal", 0.0f);
-			this->managerInst->entities[i]->AddCompVar("zVal", 0.0f);
+			if(this->managerInst->entities[i]->GetVar("transform") != nullptr)
+				this->managerInst->entities[i]->AddCompVar("transform", n_new(Math::matrix44));
+			
+			if (this->managerInst->entities[i]->GetVar("xVal") == nullptr)
+				this->managerInst->entities[i]->AddCompVar("xVal", 0.0f);
+
+			if (this->managerInst->entities[i]->GetVar("yVal") == nullptr)
+				this->managerInst->entities[i]->AddCompVar("yVal", 0.0f);
+
+			if (this->managerInst->entities[i]->GetVar("zVal") == nullptr)
+				this->managerInst->entities[i]->AddCompVar("zVal", 0.0f);
 
 			if (this->GEID == NULL)
-			{
 				this->GEID = GEIDREF;
-			}
 
 			if (this->managerInst->entities[i]->registered == false)
 				Graphics::RegisterEntity<ModelContext, ObservableContext, Characters::CharacterContext>(GEIDREF);

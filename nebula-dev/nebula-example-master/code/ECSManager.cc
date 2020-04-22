@@ -118,6 +118,8 @@ void EntityManager::DelEnt(Util::StringAtom entToDel)
 		//If we find the entity in the list, delete it and resize the list
 		if (entToDel == managerInstance->entities[i]->entName)
 		{
+			managerInstance->entities.Erase(&managerInstance->entities[i]);
+
 			for(int i = 0; i < managerInstance->entities.size(); i++)
 				managerInstance->entities.Erase(&managerInstance->entities[i]);
 			n_printf("Entity has been found and deleted!");
