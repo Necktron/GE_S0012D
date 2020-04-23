@@ -281,7 +281,14 @@ namespace Example
         */
            
         this->pythonSrv->Open();
-        this->pythonSrv->EvalFile("neckPyScript.py");
+        //this->pythonSrv->EvalFile("../../../nebula-example-master/code/neckPyScript.py");
+
+        Util::String const& entTest = "Herro";
+        Util::StringAtom yooo = entTest;
+
+        neckManager->AddEnt(yooo.Value(), GameEntity::Models::King);
+        neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");
+        neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
 
         neckManager->AddEnt("King", GameEntity::Models::King);
         neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");

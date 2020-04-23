@@ -16,9 +16,10 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 
 
 	m.def("findEnt",
-		[&](Util::StringAtom entityName)
+		[&](Util::String const& entityName)
 		{
-			pyNebRef.currEntRef = pyNebRef.pyEM->FindEnt(entityName);
+			Util::StringAtom entName = entityName;
+			pyNebRef.currEntRef = pyNebRef.pyEM->FindEnt(entName.Value());
 		}
 	, "Find an entity in the EM with corresponding name and save it as a ref");
 
@@ -35,21 +36,23 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 		, "Prints all entity names and the amount of entities");
 
 	m.def("addEnt",
-		[&](Util::StringAtom entityName)
+		[&](Util::String const& entityName)
 		{
-			pyNebRef.pyEM->AddEnt(entityName);
+			Util::StringAtom entName = entityName;
+			pyNebRef.pyEM->AddEnt(entName.Value());
 		}
 	, "Add an entity to the EM");
 
 	m.def("addEnt",
-		[&](Util::StringAtom entityName, int loadout)
+		[&](Util::String const& entityName, int loadout)
 		{
-			pyNebRef.pyEM->AddEnt(entityName, loadout);
+			Util::StringAtom entName = entityName;
+			pyNebRef.pyEM->AddEnt(entName.Value(), loadout);
 		}
 	, "Add an entity to the EM with specific mesh given by ID");
 
 	m.def("delEnt",
-		[&](Util::StringAtom entityName)
+		[&](Util::String const& entityName)
 		{
 			pyNebRef.pyEM->DelEnt(entityName);
 		}
@@ -61,13 +64,15 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	m.def("entityShutdown", &GameEntity::Shutdown, "Shutdown the Game Entity and all of it's belonging components. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("addComp",
-		[&](Util::StringAtom compToAdd)
+		[&](Util::String const& compToAdd)
 		{
+			Util::StringAtom compName = compToAdd;
+
 			for (int i = 0; i < pyNebRef.pyEM->entCount; i++)
 			{
 				if (pyNebRef.pyEM->entities[i]->entName == pyNebRef.currEntRef->entName)
 				{
-					pyNebRef.pyEM->entities[i]->AddComp(compToAdd);
+					pyNebRef.pyEM->entities[i]->AddComp(compName.Value());
 					break;
 				}
 			}
@@ -75,13 +80,15 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	, "Add a component to the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("findComp",
-		[&](Util::StringAtom compToFind)
+		[&](Util::String const& compToFind)
 		{
+			Util::StringAtom compName = compToFind;
+
 			for (int i = 0; i < pyNebRef.pyEM->entCount; i++)
 			{
 				if (pyNebRef.pyEM->entities[i]->entName == pyNebRef.currEntRef->entName)
 				{
-					pyNebRef.currCompRef = pyNebRef.pyEM->entities[i]->FindComp(compToFind);
+					pyNebRef.currCompRef = pyNebRef.pyEM->entities[i]->FindComp(compName.Value());
 					break;
 				}
 			}
@@ -89,13 +96,15 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	, "Add a component to the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("delComp",
-		[&](Util::StringAtom compToFind)
+		[&](Util::String const& compToFind)
 		{
+			Util::StringAtom compName = compToFind;
+
 			for (int i = 0; i < pyNebRef.pyEM->entCount; i++)
 			{
 				if (pyNebRef.pyEM->entities[i]->entName == pyNebRef.currEntRef->entName)
 				{
-					pyNebRef.pyEM->entities[i]->DelComp(compToFind);
+					pyNebRef.pyEM->entities[i]->DelComp(compName.Value());
 					break;
 				}
 			}
@@ -103,13 +112,15 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	, "Delete a component from the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("addCompVar",
-		[&](Util::StringAtom varName, GameEntity::CompVar varValue)
+		[&](Util::String const& varName, GameEntity::CompVar varValue)
 		{
+			Util::StringAtom vN = varName;
+
 			for (int i = 0; i < pyNebRef.pyEM->entCount; i++)
 			{
 				if (pyNebRef.pyEM->entities[i]->entName == pyNebRef.currEntRef->entName)
 				{
-					pyNebRef.pyEM->entities[i]->AddCompVar(varName, varValue);
+					pyNebRef.pyEM->entities[i]->AddCompVar(vN.Value(), varValue);
 					break;
 				}
 			}
@@ -117,7 +128,7 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	, "Add a component variable to the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("setCompVar",
-		[&](Util::StringAtom varName, GameEntity::CompVar varValue)
+		[&](Util::String const& varName, GameEntity::CompVar varValue)
 		{
 			for (int i = 0; i < pyNebRef.pyEM->entCount; i++)
 			{
@@ -131,7 +142,7 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	, "Change the value of an exsisting comp variable of the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("getCompVar",
-		[&](Util::StringAtom compToFind)
+		[&](Util::String const& compToFind)
 		{
 			for (int i = 0; i < pyNebRef.pyEM->entCount; i++)
 			{
