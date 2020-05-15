@@ -58,57 +58,54 @@ GameEntity* EntityManager::FindEnt(Util::StringAtom entitySearch)
 	if (managerInstance->entities.size() == 0)
 	{
 		n_printf("No entities exsist...\n");
-		return nullptr;
+		return 0;
 	}
 
 	n_printf("Could not find the requested entity. It's avalible for adding or is missing\n");
 	return 0;
 }
 
-bool EntityManager::AddEnt(Util::StringAtom entityName)
+void EntityManager::AddEnt(Util::StringAtom entityName)
 {
 	if (managerInstance == nullptr)
 		managerInstance = &managerInstance->getInstance();
 
-	if (FindEnt(entityName)->entName != 0)
+	if (FindEnt(entityName) != 0)
 	{
 		n_printf("ERROR: Entity is already exsisting\n");
-		return false;
 	}
 
-	n_printf("No duplicates found, entity has been added!\n");
-	GameEntity* newEnt = GameEntity::Create();
-	managerInstance->entities.Append(newEnt);
-	managerInstance->entities[managerInstance->entities.size()]->entName = entityName;
-	managerInstance->entities[managerInstance->entities.size()]->lo.loadoutID = 1;
-	managerInstance->entCount++;
-	return true;
+	else
+	{
+		n_printf("No duplicates found, entity has been added!\n");
+		GameEntity* newEnt = GameEntity::Create();
+		managerInstance->entities.Append(newEnt);
+		managerInstance->entities[managerInstance->entities.size()]->entName = entityName;
+		managerInstance->entities[managerInstance->entities.size()]->lo.loadoutID = 1;
+		managerInstance->entCount++;
+	}
 }
 
-bool EntityManager::AddEnt(Util::StringAtom entityName, int loadout)
+void EntityManager::AddEnt(Util::StringAtom entityName, int loadout)
 {
 	if (managerInstance == nullptr)
 		managerInstance = &managerInstance->getInstance();
 
-	if (FindEnt(entityName) != nullptr)
+	if (FindEnt(entityName) != 0)
 	{
-		if (FindEnt(entityName)->entName != 0)
-		{
-			n_printf("ERROR: Entity is already exsisting\n");
-			return false;
-		}
+		n_printf("ERROR: Entity is already exsisting\n");
 	}
 
-	//const Util::StringAtom newEnt = "GameEntity";
-	GameEntity* newEnt = GameEntity::Create();
-
-	n_printf("No duplicates found, entity has been added!\n");
-	managerInstance->entities.Append(newEnt);
-	managerInstance->entities[managerInstance->entities.size() - 1]->entName = entityName;
-	managerInstance->entities[managerInstance->entities.size() - 1]->entID = managerInstance->entities.size() - 1;
-	managerInstance->entities[managerInstance->entities.size() - 1]->lo.loadoutID = loadout;
-	managerInstance->entCount++;
-	return true;
+	else
+	{
+		n_printf("No duplicates found, entity has been added!\n");
+		GameEntity* newEnt = GameEntity::Create();
+		managerInstance->entities.Append(newEnt);
+		managerInstance->entities[managerInstance->entities.size() - 1]->entName = entityName;
+		managerInstance->entities[managerInstance->entities.size() - 1]->entID = managerInstance->entities.size() - 1;
+		managerInstance->entities[managerInstance->entities.size() - 1]->lo.loadoutID = loadout;
+		managerInstance->entCount++;
+	}
 }
 
 void EntityManager::DelEnt(Util::StringAtom entToDel)

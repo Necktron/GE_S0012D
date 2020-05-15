@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <typeinfo>
 #include "core/refcounted.h"
+#include "util/stringatom.h"
 #include "visibility/visibilitycontext.h"
 #include "models/streammodelpool.h"
 #include "models/modelcontext.h"
@@ -63,8 +64,8 @@ public:
 	void Update();
 	void Shutdown();
 	GameEntity* FindEnt(Util::StringAtom entitySearch);
-	bool AddEnt(Util::StringAtom entityName);
-	bool AddEnt(Util::StringAtom entityName, int loadout);
+	void AddEnt(Util::StringAtom entityName);
+	void AddEnt(Util::StringAtom entityName, int loadout);
 	void DelEnt(Util::StringAtom entToDel);
 };
 #endif

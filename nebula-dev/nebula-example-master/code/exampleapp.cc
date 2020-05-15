@@ -265,6 +265,7 @@ namespace Example
         const Ptr<Input::Mouse>& mouse = inputServer->GetDefaultMouse();
 
         neckManager = &neckManager->getInstance();
+        pyNeb.PyManagerSetup(neckManager);
 
         Graphics::GraphicsEntityId world = Graphics::CreateEntity();
         // Register entity to various graphics contexts.
@@ -281,14 +282,7 @@ namespace Example
         */
            
         this->pythonSrv->Open();
-        //this->pythonSrv->EvalFile("../../../nebula-example-master/code/neckPyScript.py");
-
-        Util::String const& entTest = "Herro";
-        Util::StringAtom yooo = entTest;
-
-        neckManager->AddEnt(yooo.Value(), GameEntity::Models::King);
-        neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");
-        neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
+        this->pythonSrv->EvalFile("../../../nebula-example-master/code/neckPyScript.py");
 
         neckManager->AddEnt("King", GameEntity::Models::King);
         neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");

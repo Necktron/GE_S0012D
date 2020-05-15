@@ -177,7 +177,8 @@ void GameEntity::SetVar(Util::StringAtom varName, CompVar newValue)
 		}
 	}
 
-	n_printf("This key does not exsist! We can't set the value!");
+	else
+		n_printf("This key does not exsist! We can't set the value!");
 }
 
 GameEntity::CompVar* GameEntity::GetVar(Util::StringAtom varName)
