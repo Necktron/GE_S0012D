@@ -28,6 +28,14 @@ void GameEntity::Init()
 	CompVar test = Graphics::GraphicsEntityId();
 	test.vGEIDref = this->entID;
 
+	//Make sure that the GEID is unique for all. Use linear probing else to decide the new GEID
+
+	if (this->registered)
+	{
+		n_printf("%s has already been initilized! Skipping...\n", this->entName);
+		return;
+	}
+
 	AddCompVar("GEID", test);
 
 	if (this->lo.loadoutID == 0)
@@ -93,7 +101,7 @@ void GameEntity::MSGSend(ComponentCore* recieverComp, ECSMSG::ECSMSGTypes msg)
 		if (compList[i]->compID == recieverComp->compID)
 		{
 			recieverComp->MSGRecieve(msg);
-			n_printf("We have sen't a message from a GameEntity");
+			n_printf("We have sen't a message from a GameEntity\n");
 			break;
 		}
 	}
@@ -120,7 +128,7 @@ ComponentCore* GameEntity::FindComp(Util::StringAtom compSearch)
 void GameEntity::AddCompVar(Util::StringAtom key, CompVar value)
 {
 	if (this->varLibrary.Contains(key))
-		n_printf("This key already exsists! Can't add pair value!");
+		n_printf("This key already exsists! Can't add pair value!\n");
 
 	else
 		switch (value.data)
@@ -151,7 +159,7 @@ void GameEntity::SetVar(Util::StringAtom varName, CompVar newValue)
 {
 	if (this->varLibrary.Contains(varName))
 	{
-		n_printf("This key exsists! We can now change the value of it!");
+		n_printf("This key exsists! We can now change the value of it!\n");
 
 		switch (this->varLibrary[varName].data)
 		{
@@ -178,19 +186,19 @@ void GameEntity::SetVar(Util::StringAtom varName, CompVar newValue)
 	}
 
 	else
-		n_printf("This key does not exsist! We can't set the value!");
+		n_printf("This key does not exsist! We can't set the value!\n");
 }
 
 GameEntity::CompVar* GameEntity::GetVar(Util::StringAtom varName)
 {
 	if (this->varLibrary.Contains(varName))
 	{
-		n_printf("This key exsists! We can now retrieve the value of it!");
+		n_printf("This key exsists! We can now retrieve the value of it!\n");
 
 		return &this->varLibrary[varName];
 	}
 
-	n_printf("This key does not exsist! We can't retrieve the value!");
+	n_printf("This key does not exsist! We can't retrieve the value!\n");
 	return nullptr;
 }
 

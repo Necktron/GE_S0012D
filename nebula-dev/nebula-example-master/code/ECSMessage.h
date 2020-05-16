@@ -14,7 +14,9 @@ public:
 		WalkBack = 4,
 		Ascend = 5,
 		Descend = 6,
-		UpdatePos = 7
+		UpdatePos = 7,
+		SpawnEnt = 8,
+		DeleteEnt = 9
 	};
 };
 #endif

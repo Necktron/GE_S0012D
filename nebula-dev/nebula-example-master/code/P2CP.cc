@@ -20,13 +20,25 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 			pyNebRef.pyManager->Init();
 		}
 	, "Initialize everything within the Entity Manager. ( All entities and compontents included )");
-	m.def("managerUpdate", &EntityManager::Update, "Update everything withint the Entity Manager");
-	m.def("managerShutdown", &EntityManager::Shutdown, "Shutdown Entity Manager and all of it's belonging entities and their components");
+
+	m.def("managerUpdate",
+		[&]
+		{
+			pyNebRef.pyManager->Update();
+		}
+	, "Update everything withint the Entity Manager");
+
+	m.def("managerShutdown",
+		[&]
+		{
+			pyNebRef.pyManager->Shutdown();
+		}
+	, "Shutdown Entity Manager and all of it's belonging entities and their components");
 
 	m.def("findEnt",
 		[&](const char *s)
 		{
-			n_printf("We are currently searching for an entity passed through PyBind!");
+			n_printf("We are currently searching for an entity passed through PyBind!\n");
 			Util::StringAtom entityName;
 			entityName = s;
 			pyNebRef.currEntRef = pyNebRef.pyManager->FindEnt(entityName);
@@ -48,7 +60,7 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	m.def("addEnt",
 		[&](const char *s)
 		{
-			n_printf("We are currently adding an entity passed through PyBind!");
+			n_printf("We are currently adding an entity passed through PyBind!\n");
 			Util::StringAtom entityName;
 			entityName = s;
 			pyNebRef.pyManager->AddEnt(entityName);
@@ -58,6 +70,7 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 	m.def("addEnt",
 		[&](const char *s, int loadout)
 		{
+			n_printf("We are currently adding an entity with loadout index passed through PyBind!\n");
 			Util::StringAtom entityName;
 			entityName = s;
 			pyNebRef.pyManager->AddEnt(entityName, loadout);
@@ -71,12 +84,29 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 			entityName = s;
 			pyNebRef.pyManager->DelEnt(entityName);
 		}
-	, "Delete an entity from the EM");
+	, "'Delete' an entity from the EM, actually just moves it out from the area");
 
 	//GAME ENTITY BINDINGS
-	m.def("entityInit", &GameEntity::Init, "Initialize everything within the Game Entity. ( The entity and all of it's compontents included ). REQUIERES 'findEnt' TO BE PERFORMED FIRST");
-	m.def("entityUpdate", &GameEntity::Update, "Update everything withint the Game Entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
-	m.def("entityShutdown", &GameEntity::Shutdown, "Shutdown the Game Entity and all of it's belonging components. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
+	m.def("entityInit",
+		[&]
+		{
+			pyNebRef.currEntRef->Init();
+		}
+	, "Initialize everything within the Game Entity. ( The entity and all of it's compontents included ). REQUIERES 'findEnt' TO BE PERFORMED FIRST");
+
+	m.def("entityUpdate",
+		[&]
+		{
+			pyNebRef.currEntRef->Update();
+		}
+	, "Update everything withint the Game Entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
+
+	m.def("entityShutdown",
+		[&]
+		{
+			pyNebRef.currEntRef->Shutdown();
+		}
+	, "Shutdown the Game Entity and all of it's belonging components. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("addComp",
 		[&](const char* s)
@@ -111,23 +141,6 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 			}
 		}
 	, "Add a component to the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
-
-	m.def("delComp",
-		[&](const char* s)
-		{
-			Util::StringAtom compToFind;
-			compToFind = s;
-
-			for (int i = 0; i < pyNebRef.pyManager->entCount; i++)
-			{
-				if (pyNebRef.pyManager->entities[i]->entName == pyNebRef.currEntRef->entName)
-				{
-					pyNebRef.pyManager->entities[i]->DelComp(compToFind);
-					break;
-				}
-			}
-		}
-	, "Delete a component from the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
 	m.def("addCompVarInt",
 		[&](const char* s, int varValue)
@@ -272,30 +285,30 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 
 					if (pyNebRef.currCompVarRef == nullptr)
 					{
-						n_printf("Comp var does not exsist! Sad times ;_;");
+						n_printf("Comp var does not exsist! Sad times ;_;\n");
 						break;
 					}
 
 					switch (pyNebRef.currEntRef->varLibrary[compToFind].data)
 					{
 					case GameEntity::CompVar::cvInt:
-						n_printf("Comp var value: %i", pyNebRef.currCompVarRef->vIntNum);
+						n_printf("Comp var value: %i\n", pyNebRef.currCompVarRef->vIntNum);
 						break;
 
 					case GameEntity::CompVar::cvFloat:
-						n_printf("Comp var value: %f", pyNebRef.currCompVarRef->vFloatNum);
+						n_printf("Comp var value: %f\n", pyNebRef.currCompVarRef->vFloatNum);
 						break;
 
 					case GameEntity::CompVar::cvMatrix:
-						n_printf("Comp var value: %f", pyNebRef.currCompVarRef->vMatrix);
+						n_printf("Comp var value: %f\n", pyNebRef.currCompVarRef->vMatrix);
 						break;
 
 					case GameEntity::CompVar::cvStringAtom:
-						n_printf("Comp var value: %s", pyNebRef.currCompVarRef->vStrAtom);
+						n_printf("Comp var value: %s\n", pyNebRef.currCompVarRef->vStrAtom);
 						break;
 
 					case GameEntity::CompVar::cvGEID:
-						n_printf("Comp var value: %i", pyNebRef.currCompVarRef->vGEIDref);
+						n_printf("Comp var value: %i\n", pyNebRef.currCompVarRef->vGEIDref);
 						break;
 					}
 				}

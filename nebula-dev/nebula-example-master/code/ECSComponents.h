@@ -8,6 +8,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <typeinfo>
+#include <time.h>
 #include "stdneb.h"
 #include "core/refcounted.h"
 #include "exampleapp.h"
@@ -66,6 +67,8 @@ public:
 	virtual void LeftWalk();
 	virtual void Ascend();
 	virtual void Descend();
+	virtual void SpawnEnt();
+	virtual void DeleteEnt();
 };
 
 //WIP
@@ -90,6 +93,8 @@ public:
 	void LeftWalk();
 	void Ascend();
 	void Descend();
+	void SpawnEnt();
+	void DeleteEnt();
 };
 
 //WIP

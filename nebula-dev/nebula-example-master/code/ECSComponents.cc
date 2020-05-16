@@ -69,6 +69,21 @@ void ComponentCore::Descend()
 	this->managerInst->entities[this->parentIDRef]->SetVar("yVal", (this->managerInst->entities[this->parentIDRef]->GetVar("yVal")->vFloatNum - 0.2f));
 }
 
+void ComponentCore::SpawnEnt()
+{
+	srand(time(NULL));
+	this->managerInst->entities[this->parentIDRef]->SetVar("xVal", static_cast <float> (rand() % 10 + 2));
+	this->managerInst->entities[this->parentIDRef]->SetVar("yVal", 0.0f);
+	this->managerInst->entities[this->parentIDRef]->SetVar("zVal", static_cast <float> (rand() % 10 + 2));
+}
+
+void ComponentCore::DeleteEnt()
+{
+	this->managerInst->entities[this->parentIDRef]->SetVar("xVal", 0.0f);
+	this->managerInst->entities[this->parentIDRef]->SetVar("yVal", 99999999.0f);
+	this->managerInst->entities[this->parentIDRef]->SetVar("zVal", 0.0f);
+}
+
 //TRANS COMP
 TransComp::TransComp()
 {
@@ -174,6 +189,18 @@ void TransComp::MSGRecieve(ECSMSG::ECSMSGTypes msg)
 		Descend();
 		Update();
 	}
+
+	else if (msg == ECSMSG::ECSMSGTypes::SpawnEnt)
+	{
+		SpawnEnt();
+		Update();
+	}
+
+	else if (msg == ECSMSG::ECSMSGTypes::DeleteEnt)
+	{
+		DeleteEnt();
+		Update();
+	}
 }
 
 void TransComp::ForwardWalk()
@@ -204,6 +231,21 @@ void TransComp::Ascend()
 void TransComp::Descend()
 {
 	yVal -= 0.2;
+}
+
+void TransComp::SpawnEnt()
+{
+	srand(time(NULL));
+	xVal = static_cast <float> (rand() % 10 + 2);
+	yVal = 0.0;
+	zVal = static_cast <float> (rand() % 10 + 2);
+}
+
+void TransComp::DeleteEnt()
+{
+	xVal = 0.0;
+	yVal = 9999999;
+	zVal = 0.0;
 }
 
 //GRAPHICAL COMP

@@ -32,6 +32,7 @@
 #include "io/fswrapper.h"
 #include "system/nebulasettings.h"
 #include "profiling/profiling.h"
+#include <time.h>
 #include "P2CP.h"
 
 #ifdef __WIN32__
@@ -386,6 +387,16 @@ namespace Example
 
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::Q) && neckManager->entities.size() > 0)
                 neckManager->Shutdown();
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::E))
+            {
+                neckManager->AddEnt("RandSpawn_", 2);
+                neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");
+                neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
+                neckManager->Init();
+                neckManager->entities[(neckManager->entCount - 1)]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::SpawnEnt);
+                neckManager->randSpawn++;
+            }
 
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::F1))
             {

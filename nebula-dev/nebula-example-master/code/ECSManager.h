@@ -57,7 +57,8 @@ public:
 
 	Util::Array<GameEntity*> entities;
 	int entCount = 0;
-
+	int randSpawn = 0;
+	int lastID = 0;
 	EntityManager* managerInstance;
 	EntityManager();
 	void Init();
