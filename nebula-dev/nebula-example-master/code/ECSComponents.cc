@@ -236,9 +236,9 @@ void TransComp::Descend()
 void TransComp::SpawnEnt()
 {
 	srand(time(NULL));
-	xVal = static_cast <float> (rand() % 10 + 2);
+	xVal = static_cast <float> (rand() % 15 - 15);
 	yVal = 0.0;
-	zVal = static_cast <float> (rand() % 10 + 2);
+	zVal = static_cast <float> (rand() % 15 - 15);
 }
 
 void TransComp::DeleteEnt()

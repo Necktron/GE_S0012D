@@ -54,6 +54,7 @@ namespace Example
 
     EntityManager* neckManager;
     P2CP pyNeb;
+    bool ableToPerform;
 
     //------------------------------------------------------------------------------
     /**
@@ -261,6 +262,7 @@ namespace Example
         ExampleApplication::Run()
     {
         bool run = true;
+        ableToPerform = true;
 
         const Ptr<Input::Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
         const Ptr<Input::Mouse>& mouse = inputServer->GetDefaultMouse();
@@ -277,10 +279,6 @@ namespace Example
         ModelContext::Setup(world, "mdl:environment/Groundplane.n3", "Examples");
         ModelContext::SetTransform(world, Math::matrix44::translation(Math::point(0, 0, 0)));
         ObservableContext::Setup(world, VisibilityEntityType::Model);
-
-        /*
-            PYTHON INIT CREATION
-        */
            
         this->pythonSrv->Open();
         this->pythonSrv->EvalFile("../../../nebula-example-master/code/neckPyScript.py");
@@ -350,7 +348,7 @@ namespace Example
 
             // force wait immediately
             WindowPresent(wnd, frameIndex);
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::Escape)) run = false;
+            if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::Escape)) run = false;
 
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::LeftMenu))
                 this->UpdateCamera();
@@ -385,17 +383,37 @@ namespace Example
                 }
             }
 
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::Q) && neckManager->entities.size() > 0)
-                neckManager->Shutdown();
-
-            if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::E))
+            if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::Q) && neckManager->entities.size() > 0 && ableToPerform == true)
             {
-                neckManager->AddEnt("RandSpawn_", 2);
-                neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");
-                neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
-                neckManager->Init();
-                neckManager->entities[(neckManager->entCount - 1)]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::SpawnEnt);
-                neckManager->randSpawn++;
+                ableToPerform = false;
+                neckManager->Shutdown();
+                ableToPerform = true;
+            }
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::E) && ableToPerform == true)
+            {
+                ableToPerform = false;
+
+                char spawnName[64] = "RandSpawn_";
+                char num[8];
+                sprintf(num, "%d", neckManager->entCount);
+                strcat(spawnName, num);
+
+                if (neckManager->FindEnt(spawnName))
+                {
+                    n_printf("ERROR: A randomly generated entity with this name already exsists!\n");
+                }
+
+                else
+                {
+                    neckManager->AddEnt(spawnName);
+                    neckManager->entities[(neckManager->entCount - 1)]->AddComp("TransformComp");
+                    neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
+                    neckManager->entities[(neckManager->entCount - 1)]->Init();
+                    neckManager->entities[(neckManager->entCount - 1)]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::SpawnEnt);
+                    n_printf("Entities created during runtime before crash with AT implementation: %i!\n", neckManager->totalEntCount);
+                    ableToPerform = true;
+                }
             }
 
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::F1))
@@ -412,6 +430,24 @@ namespace Example
 #else
                 n_printf("Cannot open browser. URL is %s\n", url.AsCharPtr());
 #endif
+            }
+
+            if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::X) && ableToPerform == true)
+            {
+                ableToPerform = false;
+                n_printf("X is down!\n");
+
+                //DELETE ALL PREVIOUS ENTITIES
+                if (neckManager->entCount > 0)
+                    neckManager->Shutdown();
+
+                //CYCLE JSON FILE, let's say Map 1, Map 2, Map 3
+
+                //READ JSON FILE
+
+                //IO::
+
+                ableToPerform = true;
             }
 
             frameIndex++;

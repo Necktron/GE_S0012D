@@ -193,12 +193,12 @@ GameEntity::CompVar* GameEntity::GetVar(Util::StringAtom varName)
 {
 	if (this->varLibrary.Contains(varName))
 	{
-		n_printf("This key exsists! We can now retrieve the value of it!\n");
+		//n_printf("This key exsists! We can now retrieve the value of it!\n");
 
 		return &this->varLibrary[varName];
 	}
 
-	n_printf("This key does not exsist! We can't retrieve the value!\n");
+	//n_printf("This key does not exsist! We can't retrieve the value!\n");
 	return nullptr;
 }
 

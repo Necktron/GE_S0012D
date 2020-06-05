@@ -13,13 +13,6 @@ void EntityManager::Init()
 	if (managerInstance == nullptr)
 		managerInstance = &managerInstance->getInstance();
 
-	//If we were to add new entities after a Shutdown, we need to remember what index was used as ID
-	//If we skip this we will get errors since it's already allocated with the GEID on GraphicsSetup in Nebula
-	if (managerInstance->entCount == 1 && managerInstance->lastID != 0)
-	{
-		managerInstance->entities[0]->entID = managerInstance->lastID + 1;
-	}
-
 	//Make sure all entity ID's are unique while multiple entities exsist
 	if (managerInstance->entities.size() > 1)
 	{
@@ -101,12 +94,15 @@ void EntityManager::AddEnt(Util::StringAtom entityName)
 	else
 	{
 		n_printf("No duplicates found, entity has been added!\n");
+		srand(time(NULL));
 		GameEntity* newEnt = GameEntity::Create();
 		managerInstance->entities.Append(newEnt);
-		managerInstance->entities[managerInstance->entities.size()]->entName = entityName;
-		managerInstance->entities[managerInstance->entities.size() - 1]->entID = managerInstance->entities.size() - 1;
-		managerInstance->entities[managerInstance->entities.size()]->lo.loadoutID = 1;
+		managerInstance->entities[managerInstance->entities.size() - 1]->entName = entityName;
+		managerInstance->entities[managerInstance->entities.size() - 1]->entID = 1337 + managerInstance->lastID;
+		managerInstance->entities[managerInstance->entities.size() - 1]->lo.loadoutID = static_cast <float> (rand() % 3);
+		managerInstance->lastID++;
 		managerInstance->entCount++;
+		managerInstance->totalEntCount++;
 	}
 }
 
@@ -126,9 +122,11 @@ void EntityManager::AddEnt(Util::StringAtom entityName, int loadout)
 		GameEntity* newEnt = GameEntity::Create();
 		managerInstance->entities.Append(newEnt);
 		managerInstance->entities[managerInstance->entities.size() - 1]->entName = entityName;
-		managerInstance->entities[managerInstance->entities.size() - 1]->entID = managerInstance->entities.size() - 1;
+		managerInstance->entities[managerInstance->entities.size() - 1]->entID = 1337 + managerInstance->lastID;
 		managerInstance->entities[managerInstance->entities.size() - 1]->lo.loadoutID = loadout;
+		managerInstance->lastID++;
 		managerInstance->entCount++;
+		managerInstance->totalEntCount++;
 	}
 }
 
@@ -153,8 +151,7 @@ void EntityManager::DelEnt(Util::StringAtom entToDel)
 				managerInstance->entities[j] = managerInstance->entities[j + 1];
 			}
 
-			managerInstance->entities[managerInstance->entities.size() - 1] = {};
-			managerInstance->entities.resize(managerInstance->entities.size() - 1);
+			managerInstance->entities.EraseIndex(managerInstance->entities.size() - 1);
 
 			n_printf("Entity has been found and deleted!\n");
 
