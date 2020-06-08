@@ -1,0 +1,12 @@
+{
+  "Entity": {
+    "entName": "JSON_King",
+    "entID": "0",
+    "T_instance": "Y",
+    "G_instance": "Y",
+    "Loadout": "0",
+    "varLibrary": {
+      "yVal": "5.0"
+    }
+  }
+}

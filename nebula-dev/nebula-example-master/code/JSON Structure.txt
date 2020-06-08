@@ -1,0 +1,17 @@
+Entity:
+ - entName
+ - entID
+ - compList:
+  - components:
+   - componentID
+   - parentNameRef
+   - parentIDRef
+ - T_Instance
+ - G_Instance
+ - Loadout
+ - varLibrary:
+  - xVal
+  - yVal
+  - zVal
+  - GEID
+  - loadout Mesh / Anim / Skeleton, given by Loadout var

@@ -54,6 +54,7 @@ namespace Example
 
     EntityManager* neckManager;
     P2CP pyNeb;
+    int cycleJSON;
     bool ableToPerform;
 
     //------------------------------------------------------------------------------
@@ -263,6 +264,7 @@ namespace Example
     {
         bool run = true;
         ableToPerform = true;
+        cycleJSON = 0;
 
         const Ptr<Input::Keyboard>& keyboard = inputServer->GetDefaultKeyboard();
         const Ptr<Input::Mouse>& mouse = inputServer->GetDefaultMouse();
@@ -356,6 +358,7 @@ namespace Example
             if (this->inputServer->GetDefaultKeyboard()->KeyPressed(Input::Key::F8))
                 Resources::ResourceManager::Instance()->ReloadResource("shd:imgui.fxb");
 
+            //CONTROLS FOR THE PRIMARY TARGET P1
             if (neckManager->entities.size() > 1)
             {
                 for (int i = 0; i < neckManager->entities.size(); i++)
@@ -383,6 +386,7 @@ namespace Example
                 }
             }
 
+            //"DELETE" ALL ENTITIES CURRENTLY IN THE SCENE
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::Q) && neckManager->entities.size() > 0 && ableToPerform == true)
             {
                 ableToPerform = false;
@@ -390,6 +394,7 @@ namespace Example
                 ableToPerform = true;
             }
 
+            //SPAWN A ENTITY WITH RANDOM LOADOUT AND POSITION
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::E) && ableToPerform == true)
             {
                 ableToPerform = false;
@@ -416,6 +421,48 @@ namespace Example
                 }
             }
 
+            //SWITCH BETWEEN JSON FILES WITH SCENE DESRIPTIONS
+            if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::X) && ableToPerform == true)
+            {
+                ableToPerform = false;
+                n_printf("X is down!\n");
+
+                StreamReader* neckParser = StreamReader::Create();
+                Stream* pathToJSON = Stream::Create();
+
+                //DELETE ALL PREVIOUS ENTITIES, IF ANY EXSIST
+                if (neckManager->entCount > 0)
+                    neckManager->Shutdown();
+
+                //CYCLE JSON FILE, let's say Map 1, Map 2, Map 3
+
+                pathToJSON->SetURI("JSONONE.json");
+                neckParser->SetStream(pathToJSON);
+                neckParser->HasStream();
+
+                if (pathToJSON->CanRead())
+                    n_printf("Bless...! <3\n");
+
+                //CYCLE JSON FILE, let's say Map 1, Map 2, Map 3
+                neckParser->Open();
+
+                if (pathToJSON->IsOpen())
+                {
+                    n_printf("Sweet <3\n");
+                }
+
+                else
+                {
+                    n_printf("Fuck...\n");
+                }
+
+                pathToJSON->Close();
+
+                //READ JSON FILE
+
+                ableToPerform = true;
+            }
+
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::F1))
             {
                 // Open browser with debug page.
@@ -430,24 +477,6 @@ namespace Example
 #else
                 n_printf("Cannot open browser. URL is %s\n", url.AsCharPtr());
 #endif
-            }
-
-            if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::X) && ableToPerform == true)
-            {
-                ableToPerform = false;
-                n_printf("X is down!\n");
-
-                //DELETE ALL PREVIOUS ENTITIES
-                if (neckManager->entCount > 0)
-                    neckManager->Shutdown();
-
-                //CYCLE JSON FILE, let's say Map 1, Map 2, Map 3
-
-                //READ JSON FILE
-
-                //IO::
-
-                ableToPerform = true;
             }
 
             frameIndex++;
