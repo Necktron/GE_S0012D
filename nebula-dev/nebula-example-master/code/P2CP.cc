@@ -1,5 +1,6 @@
 #include "foundation/stdneb.h"
 #include "P2CP.h"
+#include "Python.h"
 namespace py = pybind11;
 
 P2CP pyNebRef;

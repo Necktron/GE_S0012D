@@ -1,12 +1,31 @@
-{
-  "Entity": {
+[
+  {
     "entName": "JSON_King",
-    "entID": "0",
     "T_instance": "Y",
     "G_instance": "Y",
     "Loadout": "0",
     "varLibrary": {
       "yVal": "5.0"
     }
+  },
+
+  {
+    "entName": "JSON_Knight",
+    "T_instance": "Y",
+    "G_instance": "Y",
+    "Loadout": "1",
+    "varLibrary": {
+      "yVal": "10.0"
+    }
+  },
+
+  {
+    "entName": "JSON_Spearman",
+    "T_instance": "Y",
+    "G_instance": "Y",
+    "Loadout": "2",
+    "varLibrary": {
+      "yVal": "15.0"
+    }
   }
-}
+]

@@ -34,6 +34,7 @@
 #include "profiling/profiling.h"
 #include <time.h>
 #include "P2CP.h"
+#include "pjson/pjson.h"
 
 #ifdef __WIN32__
 #include <shellapi.h>
@@ -427,38 +428,31 @@ namespace Example
                 ableToPerform = false;
                 n_printf("X is down!\n");
 
-                StreamReader* neckParser = StreamReader::Create();
-                Stream* pathToJSON = Stream::Create();
-
                 //DELETE ALL PREVIOUS ENTITIES, IF ANY EXSIST
                 if (neckManager->entCount > 0)
                     neckManager->Shutdown();
 
                 //CYCLE JSON FILE, let's say Map 1, Map 2, Map 3
+                cycleJSON++;
 
-                pathToJSON->SetURI("JSONONE.json");
-                neckParser->SetStream(pathToJSON);
-                neckParser->HasStream();
-
-                if (pathToJSON->CanRead())
-                    n_printf("Bless...! <3\n");
-
-                //CYCLE JSON FILE, let's say Map 1, Map 2, Map 3
-                neckParser->Open();
-
-                if (pathToJSON->IsOpen())
-                {
-                    n_printf("Sweet <3\n");
-                }
-
-                else
-                {
-                    n_printf("Fuck...\n");
-                }
-
-                pathToJSON->Close();
+                if (cycleJSON > 2)
+                    cycleJSON = 0;
 
                 //READ JSON FILE
+                switch (cycleJSON)
+                {
+                    case 0:
+                        this->pythonSrv->EvalFile("../../../nebula-example-master/code/readJSONtwo.py");
+                        break;
+
+                    case 1:
+                        this->pythonSrv->EvalFile("../../../nebula-example-master/code/readJSONtwo.py");
+                        break;
+
+                    case 2:
+                        this->pythonSrv->EvalFile("../../../nebula-example-master/code/readJSONtwo.py");
+                        break;
+                }
 
                 ableToPerform = true;
             }
