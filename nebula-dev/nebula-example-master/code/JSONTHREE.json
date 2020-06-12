@@ -1,0 +1,41 @@
+[
+	{
+		"entName": "JSON_KnightA",
+		"T_instance": "Y",
+		"G_instance": "Y",
+		"Loadout": "1",
+		"varLibrary": {
+			"xVal": "3.0"
+		}
+	},
+
+	{
+		"entName": "JSON_KnightB",
+		"T_instance": "Y",
+		"G_instance": "Y",
+		"Loadout": "1",
+		"varLibrary": {
+			"xVal": "1.0"
+		}
+	},
+
+	{
+		"entName": "JSON_KnightC",
+		"T_instance": "Y",
+		"G_instance": "Y",
+		"Loadout": "1",
+		"varLibrary": {
+			"xVal": "-1.0"
+		}
+	},
+
+	{
+		"entName": "JSON_KnightD",
+		"T_instance": "Y",
+		"G_instance": "Y",
+		"Loadout": "1",
+		"varLibrary": {
+			"xVal": "-3.0"
+		}
+	}
+]

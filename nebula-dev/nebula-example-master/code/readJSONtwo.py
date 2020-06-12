@@ -3,44 +3,37 @@ import json
 
 print("We are live with JSON - 2!\n")
 
-with open('../../../nebula-example-master/code/JSONONE.json') as path:
+with open('../../../nebula-example-master/code/JSONTWO.json') as path:
     data = json.load(path)
 
 print(data)
 
-length = len(data);
-
-print(length)
-
 for x in data:
-    print(x["entName"])
 
     entName = x['entName']
     loadout = x['Loadout']
 
-    print(entName)
-    print(loadout)
-
-    neckPy.addEnt(entName, loadout)
-    neckPy.Find(x[entName])
+    neckPy.addEnt(str(entName), int(loadout))
+    neckPy.findEnt(str(entName))
 
     if(x['T_instance'] == 'Y'):
         neckPy.addComp("TransformComp")
 
-    if(x['T_instance'] == 'Y'):
-        neckPy.addComp("TransformComp")
+    if(x['G_instance'] == 'Y'):
+        neckPy.addComp("GraphicalComp")
 
     for var in x['varLibrary']:
-        print(x['varLibrary'][var])
         varName = x['varLibrary']
         varVal = x['varLibrary'][var]
-        neckPy.addCompVar(varName, varVal)
 
-#neckPy.addEnt("P1", 0)
-#neckPy.findEnt("P1")
-#neckPy.addComp("TransformComp")
-#neckPy.addComp("GraphicalComp")
-#neckPy.addCompVar("transform", "matrix")
-#neckPy.addCompVar("nickname", "PythonGuy")
+        if("nickname" in varName):
+            neckPy.addCompVar("nickname", str(varVal))
 
-print("JSON - 2 has reached it's end!\n")
+        elif("xVal" in varName):
+            neckPy.addCompVarFloat("xVal", float(varVal))
+
+        elif("yVal" in varName):
+            neckPy.addCompVarFloat("yVal", float(varVal))
+
+        elif("zVal" in varName):
+            neckPy.addCompVarFloat("zVal", float(varVal))

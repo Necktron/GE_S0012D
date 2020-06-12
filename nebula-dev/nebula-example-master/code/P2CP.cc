@@ -143,23 +143,6 @@ PYBIND11_EMBEDDED_MODULE(pyNebula, m)
 		}
 	, "Add a component to the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
 
-	m.def("addCompVarInt",
-		[&](const char* s, int varValue)
-		{
-			Util::StringAtom varName;
-			varName = s;
-
-			for (int i = 0; i < pyNebRef.pyManager->entCount; i++)
-			{
-				if (pyNebRef.pyManager->entities[i]->entName == pyNebRef.currEntRef->entName)
-				{
-					pyNebRef.pyManager->entities[i]->AddCompVar(varName, varValue);
-					break;
-				}
-			}
-		}
-	, "Add a int variable to the specific entity. REQUIERES 'findEnt' TO BE PERFORMED FIRST");
-
 	m.def("addCompVarFloat",
 		[&](const char* s, float varValue)
 		{

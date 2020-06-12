@@ -1,0 +1,31 @@
+[
+	{
+		"entName": "JSON_King",
+		"T_instance": "Y",
+		"G_instance": "Y",
+		"Loadout": "0",
+		"varLibrary": {
+			"yVal": "3.0"
+		}
+	},
+
+	{
+		"entName": "JSON_SpearmanL",
+		"T_instance": "Y",
+		"G_instance": "Y",
+		"Loadout": "2",
+		"varLibrary": {
+			"xVal": "3.0"
+		}
+	},
+
+	{
+		"entName": "JSON_SpearmanR",
+		"T_instance": "Y",
+		"G_instance": "Y",
+		"Loadout": "2",
+		"varLibrary": {
+			"xVal": "-3.0"
+		}
+	}
+]

@@ -402,7 +402,6 @@ namespace Example
 
                 char spawnName[64] = "RandSpawn_";
                 char num[8];
-                sprintf(num, "%d", neckManager->entCount);
                 strcat(spawnName, num);
 
                 if (neckManager->FindEnt(spawnName))
@@ -417,7 +416,6 @@ namespace Example
                     neckManager->entities[(neckManager->entCount - 1)]->AddComp("GraphicalComp");
                     neckManager->entities[(neckManager->entCount - 1)]->Init();
                     neckManager->entities[(neckManager->entCount - 1)]->compList[0]->MSGRecieve(ECSMSG::ECSMSGTypes::SpawnEnt);
-                    n_printf("Entities created during runtime before crash with AT implementation: %i!\n", neckManager->totalEntCount);
                     ableToPerform = true;
                 }
             }
@@ -426,7 +424,6 @@ namespace Example
             if (this->inputServer->GetDefaultKeyboard()->KeyDown(Input::Key::X) && ableToPerform == true)
             {
                 ableToPerform = false;
-                n_printf("X is down!\n");
 
                 //DELETE ALL PREVIOUS ENTITIES, IF ANY EXSIST
                 if (neckManager->entCount > 0)
@@ -442,7 +439,7 @@ namespace Example
                 switch (cycleJSON)
                 {
                     case 0:
-                        this->pythonSrv->EvalFile("../../../nebula-example-master/code/readJSONtwo.py");
+                        this->pythonSrv->EvalFile("../../../nebula-example-master/code/readJSONone.py");
                         break;
 
                     case 1:
@@ -450,9 +447,11 @@ namespace Example
                         break;
 
                     case 2:
-                        this->pythonSrv->EvalFile("../../../nebula-example-master/code/readJSONtwo.py");
+                        this->pythonSrv->EvalFile("../../../nebula-example-master/code/readJSONthree.py");
                         break;
                 }
+
+                neckManager->Init();
 
                 ableToPerform = true;
             }

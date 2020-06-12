@@ -5,7 +5,7 @@
     "G_instance": "Y",
     "Loadout": "0",
     "varLibrary": {
-      "yVal": "5.0"
+      "yVal": "6.0"
     }
   },
 
@@ -15,7 +15,7 @@
     "G_instance": "Y",
     "Loadout": "1",
     "varLibrary": {
-      "yVal": "10.0"
+      "yVal": "3.0"
     }
   },
 
@@ -25,7 +25,7 @@
     "G_instance": "Y",
     "Loadout": "2",
     "varLibrary": {
-      "yVal": "15.0"
+      "yVal": "0.0"
     }
   }
 ]
