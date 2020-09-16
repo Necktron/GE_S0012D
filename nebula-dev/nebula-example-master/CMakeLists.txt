@@ -16,6 +16,23 @@ nebula_begin_app(nebula-example windowed)
             main.cc
             exampleapp.cc
             exampleapp.h
+	    ECS.h
+	    ECSComponents.cc
+	    ECSComponents.h
+	    ECSEntity.cc
+	    ECSEntity.h
+	    ECSManager.cc
+	    ECSManager.h
+	    ECSMessage.h
+	    JSONONE.json
+	    JSONTWO.json
+	    JSONTHREE.json
+	    neckPyScript.py
+	    P2CP.cc
+	    P2CP.h
+	    readJSONone.py
+	    readJSONtwo.py
+	    readJSONthree.py
         )
 
     fips_deps(foundation render resource dynui scripting)
